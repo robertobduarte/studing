@@ -48,7 +48,7 @@ $perfilNome = $m_session->getValue( 'perfil_nome' );
 			        <span class="icon-bar"></span>
 			        <span class="icon-bar"></span>
 			    </button>			
-				<a class="navbar-brand" href="<?php echo '/'. APP ?>"><img height='30px' src="img/secad.png" alt="" class=""></a>
+				<a class="navbar-brand" href="<?php echo '/'. APP ?>"><img height='30px' src="img/logo.png" alt="" class=""></a>
 			</div>
 			<div class="collapse navbar-collapse col-md-8 col-sm-12" id="menu">				
 				<ul class="nav navbar-nav">	

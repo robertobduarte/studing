@@ -19,7 +19,7 @@ class Conex implements IConex{
                     //self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT); // ERRMODE_SILENT
                 }
                 catch(PDOException $e) {
-                    echo 'Nao foi possivel obter uma conexao com o banco de dados. '.$e->getMessage();
+                    echo 'Nao foi possivel obter uma conexao com o banco de dados*. '.$e->getMessage();
                 }
             }
             return self::$instance;

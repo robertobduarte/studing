@@ -1,5 +1,5 @@
 <?php
-define('APP', "base/");
+define('APP', "studing/");
 //define('LANG', "pt_PT/");
 
 date_default_timezone_set('America/Sao_Paulo');
@@ -7,7 +7,7 @@ date_default_timezone_set('America/Sao_Paulo');
 error_reporting( E_ALL );
 
 //local do arquivo de log
-ini_set( 'error_log', 'error/log_de_erros.log' );
+//ini_set( 'error_log', 'error/log_de_erros.log' );
 
 ini_set( 'ignore_repeated_source', true );    
 ini_set( 'ignore_repeated_errors', true );
@@ -27,23 +27,24 @@ $file = $_SERVER['DOCUMENT_ROOT'] . '/' . APP . "environment.txt";
 $env = file_get_contents($file);
 
 if( $env == 'desenvolvimento'){
-
+	
 	//BANCO DE DADOS***********
 	define('DB', "mysql");
-	define('DB_NAME', "base");
+	define('DB_NAME', "studing");
 	define('DB_HOST', "localhost");
 	define('DB_USER', "root");
 	define('DB_PASS', "");
 	define('DB_PORT', "3306");
+	
 
 }else if( $env == 'producao'){
 			
 	//BANCO DE DADOS***********
 	define('DB', "mysql");
-	define('DB_NAME', "base");
-	define('DB_HOST', "localhost");
-	define('DB_USER', "root");
-	define('DB_PASS', "");
+	define('DB_NAME', "comidinhaspara");
+	define('DB_HOST', "mysql.comidinhasparaceliaco.com.br");
+	define('DB_USER', "comidinhaspara");
+	define('DB_PASS', "M3rd41980");
 	define('DB_PORT', "3306");
 
 }

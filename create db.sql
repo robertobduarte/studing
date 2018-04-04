@@ -1,8 +1,8 @@
 #MYSQL
 
-CREATE SCHEMA `base` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA `studing` DEFAULT CHARACTER SET utf8 ;
 
-use base;
+use studing;
 
 
 create table usuario (
