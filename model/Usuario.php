@@ -23,7 +23,7 @@ class Usuario extends IObject{
 
 	}
 
-	protected function listar( $id = null ){
+	public function listar( $id = null ){
 
 	}
 
