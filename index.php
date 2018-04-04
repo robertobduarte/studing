@@ -17,8 +17,25 @@ if ( !$m_session->getValue('usuario') ) {
 
 }else{
 
-    $url = $m_session->getValue( 'url', true );
-    $location = ( $url )? $url : 'view/home.php';
+    $location = $m_session->getValue( 'url', true );
+    if( !$location ){
+
+        $perfil = $m_session->getValue( 'perfil' );
+        switch ( $perfil ) {
+
+            case 'ADM':
+                $location = "admin.php"
+                break;
+
+            case 'STD':
+                $location = "student.php"
+                break;
+            
+            default:
+                $location = "student.php"
+                break;
+        }
+    }
 
 }
 
