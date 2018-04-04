@@ -45,6 +45,7 @@ a:focus {
 }
 
 #panel_main {
+  margin-top: 70px;
   /*background: url('../img/bg.png') repeat;*/
 }
 .corposistema {

@@ -26,3 +26,19 @@ create table pessoa (
 	cep varchar(15),
 	estado varchar(100)
 )
+
+
+CREATE TABLE objetivo (
+    id INT auto_increment NOT NULL primary key,
+    nome VARCHAR(200) NOT NULL,
+    descricao TEXT,
+    objetivo_tipo INT,
+    parent INT,
+    leaf char(1) NOT NULL DEFAULT 'S'
+);
+
+
+CREATE TABLE objetivo_tipo (
+    id INT NOT NULL primary key,
+    nome VARCHAR(200) NOT NULL
+);

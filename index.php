@@ -4,8 +4,8 @@ include_once __DIR__ . "/config.php";
 $m_session = new Session();
 
 $m_autenticacao = new Autenticacao();
-$m_autenticacao->setUser( 'sofiarduarte' );
-//$m_autenticacao->setUser( 'robertobduarte' );
+//$m_autenticacao->setUser( 'sofiarduarte' );
+$m_autenticacao->setUser( 'robertobduarte' );
 //debug($_SESSION);
 //exit();
 

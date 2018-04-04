@@ -18,9 +18,9 @@ abstract class IObject{
 	}
 
 
-	abstract protected function getObjeto( $id );
+	abstract public function getObjeto( $id );
 	abstract protected function defineTipos();
-	abstract protected function listar( $id = null );
+	abstract public function listar( $id = null );
 
 
 	public function __set( $classe , $objeto ) {

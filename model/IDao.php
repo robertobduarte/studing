@@ -10,10 +10,10 @@ abstract class IDao{
 		$this->conex = Conex::doConnect();
 	}
 
-	abstract protected function buscar( $id );
-	abstract protected function listar();
-	abstract protected function inserir( IObject $objeto );
-	abstract protected function editar( Iobject $objeto );
+	abstract public function buscar( $id );
+	abstract public function listar();
+	abstract public function inserir( IObject $objeto );
+	abstract public function editar( Iobject $objeto );
 	
 
 	
