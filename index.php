@@ -5,6 +5,7 @@ $m_session = new Session();
 
 $m_autenticacao = new Autenticacao();
 $m_autenticacao->setUser( 'sofiarduarte' );
+//$m_autenticacao->setUser( 'robertobduarte' );
 //debug($_SESSION);
 //exit();
 
@@ -24,11 +25,11 @@ if ( !$m_session->getValue('usuario') ) {
         switch ( $perfil ) {
 
             case 'ADM':
-                $location = "admin.php";
+                $location = "admin/home.php";
                 break;
 
             case 'STD':
-                $location = "student.php";
+                $location = "student/home.php";
                 break;
             
             default:

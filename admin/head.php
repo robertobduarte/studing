@@ -26,13 +26,13 @@ $perfilNome = $m_session->getValue( 'perfil_nome' );
 		<link href="css/jquery-ui.theme.css" rel="stylesheet">
 		<link href="css/jquery-ui.structure.css" rel="stylesheet">
 		<link href="css/font-awesome.css" rel="stylesheet">
-		<link href="css/sistema.css?v=<?= filemtime('css/sistema.css'); ?>" rel="stylesheet">
+		<link href="css/admin.css?v=<?= filemtime('css/admin.css'); ?>" rel="stylesheet">
 
 		<!-- JS -->		
 		<script src="js/jquery-3-2-1.js"></script>
 		<script src="js/jquery-ui.js"></script>
 		<script src="js/bootstrap.js"></script>
-		<script src="js/sistema.js?v=<?= filemtime('js/sistema.js'); ?>"></script>
+		<script src="js/admin.js?v=<?= filemtime('js/admin.js'); ?>"></script>
 	
 	</head>
 	<body>
