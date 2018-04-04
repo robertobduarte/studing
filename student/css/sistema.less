@@ -1,0 +1,309 @@
+
+@bodyColor: #333;
+@strongColor: #0a0830; //cor principal (+ forte)
+@lessColor: #8dc63f4d;
+@colorGray: gray;
+@lightBackColor: #c6c6c6; //cor secunsária (+ clara)
+@veryLightBackColor: #f8f8f8; //cor secunsária (+ clara)
+@colorAhover: #337ab7;
+@imgBackground: 'placeholder.jpg';
+
+
+body {
+    font-family: Open-Sans, Arial, Helvetica,sans-serif;
+	font-size: 14px;
+	color: @bodyColor;
+}
+
+a:hover, a:focus{
+	color: @colorAhover!important;
+	text-decoration: none;
+}
+
+.btn:hover, .btn:focus, .btn.focus {
+    color: @strongColor;
+    background: @lightBackColor;
+    border-color: @lightBackColor;
+    text-decoration: none;
+}
+
+.btn-cor-primary:hover, .btn-cor-primary:focus{
+	background: @lightBackColor;
+	border-color: @lightBackColor;
+}
+
+.divesp{
+  margin: 25px 0;
+}
+
+.divesp10{
+  margin: 10px 0;
+}
+
+
+.tpSlide{
+	background: #ebf0ba!important;
+}
+
+.packshot{
+	min-height: 215px;
+}
+
+#panel_main{
+	/*background: url('../img/bg.png') repeat;*/
+}
+
+.corposistema{	
+	background: #f2f2f299;
+	border-right: solid 1px #d8d8d8;
+	border-left: solid 1px #d8d8d8;
+
+}
+
+.panel_conteudo, .panel_menu{
+	padding-top: 90px;
+	padding-bottom: 90px;
+}
+
+#nomeUser, #perfilUser {
+    margin-top: 20px;
+    margin-right: 20px;
+    color: @strongColor;
+    font-style: italic;
+}
+
+#footer{
+	background: @strongColor;
+	height: 20px;
+	margin-top: 20px;
+}
+
+.link_dominio{
+	margin: 10px;
+	padding: 10px;
+	border: solid 1px gray;
+	border-radius: 6px;
+	background: #e7e7e7;
+	cursor: pointer;
+}
+
+.img-dominio{
+	padding: 20px;
+}
+
+.label-dominio{
+	color: gray;
+	font-weight: bold;
+	text-align: center;
+}
+
+.hover{
+	 box-shadow: 2px 2px 20px black;
+	 background: #efefef;
+	 border:none;
+}
+
+.panel_menu{
+	background: @lightBackColor;
+    box-shadow: 0 0 20px #7a7272;
+}
+
+#menu_lateral{
+	padding-right: 0!important;
+	padding-left: 0!important;
+}
+
+.listMenu{
+	padding: 15px;
+	cursor: pointer;
+	padding-left: 40px;
+}
+
+.link_menu{	
+	color:black;
+	font-weight: bold;
+	text-decoration: none !important;
+}
+
+.menuOver{
+	background: @strongColor;
+	color: white;
+}
+
+.menuSelected{
+	background: @colorGray;
+	color: white;
+}
+
+.aOver{
+	color:white!important;
+}
+
+.logoDominio{
+	padding: 15px;
+	border-top: solid 1px @strongColor;
+	border-bottom: solid 1px @strongColor;
+}
+
+.conteudo{
+	z-index: 999;
+}
+
+.tituloPage{
+	background: @strongColor;
+	color: white;
+	font-weight: bold;
+}
+
+.objetivo_main {
+    color: @strongColor;
+    font-weight: bold;    
+    font-size: 1.5em;
+    padding: 10px;
+    background: @lightBackColor;
+    border-bottom: solid 1px @strongColor;
+}
+
+.objetivo_children {
+    color: @strongColor;
+    font-weight: bold;
+    font-size: 1.3em; 
+    padding: 5px 15px;    
+}
+
+.without_children {    
+    font-size: 1.1em !important;
+	margin: 0 !important;
+	font-weight: 100 !important;
+}
+
+.boxListObjetivos {
+    border: solid 1px @lightBackColor;
+    margin: 10px 0 20px 0;
+    border-radius: 6px 6px 0 0;
+    z-index: 999;
+}
+
+.linkObjetivo{
+	color: @strongColor;	
+}
+
+.linkObj{
+	cursor: pointer;
+}
+
+.linkTree a{
+    font-size: 1.2em;
+    font-weight: bold;
+    color: @bodyColor;
+}
+
+.oculta{
+	display:none!important
+}
+
+.visivel{
+	display:block;
+}
+
+.corpoPage{
+	margin: 20px 0;
+}
+
+.btn-100{
+	width: 100%;
+	margin: 2px 0px;
+}
+
+.btn-cor-primary{
+	background: @strongColor;
+	border-color: @strongColor;
+}
+
+.error{
+	color:red!important;
+}
+
+.confirm {
+  color: red!important;
+  background: #ffb6b6 !important;
+}
+
+.tituloAcaPagina{
+	color: @strongColor;
+	font-weight: bold;
+}
+
+.linkProva, .linkob {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: @strongColor;
+  text-decoration: none;
+}
+
+.banner{
+	width: 100%;
+}
+
+.iconeLink{
+	font-weight: bold;
+	cursor:pointer;
+}
+
+.divDestaqueClara {
+    background: @veryLightBackColor;
+    padding: 20px;
+    margin: 20px 0;
+    border-top: 2px gray solid;
+}
+
+.slideInativo{
+  border-left: solid 3px gray;
+}
+.slideAtivo{
+  border-left: solid 3px #005c00;
+}
+.slideSubstituido{
+  border-left: solid 3px #d15e0a;
+}
+.slideAnulado{
+  border-left: solid 3px #9c2d2d;
+}
+
+
+/* AVALIAÇÃO */
+
+.aval_banner {
+  max-height: 125px;
+}
+
+#banner{
+  background: @strongColor;
+  color: white;
+}
+
+#banner h2{
+  margin:10px;
+}
+
+#tarjaSubCabecalho {
+  height: 7px;
+  background: @strongColor;
+}
+
+#boxMesagemInicial {
+  padding: 20px;
+  background: @veryLightBackColor;
+  margin: 20px;
+}
+
+.mesagemInicial {
+  padding: 10px;
+}
+
+.btn-init-aval{
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+/* **** */
