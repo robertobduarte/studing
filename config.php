@@ -26,7 +26,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/' . APP . "autoload.php";
 $file = $_SERVER['DOCUMENT_ROOT'] . '/' . APP . "environment.txt";
 $env = file_get_contents($file);
 
-if( $env == 'desenvolvimento'){
+if( trim($env) == 'desenvolvimento'){
 	
 	//BANCO DE DADOS***********
 	define('DB', "mysql");
@@ -37,7 +37,7 @@ if( $env == 'desenvolvimento'){
 	define('DB_PORT', "3306");
 	
 
-}else if( $env == 'producao'){
+}else if( trim($env) == 'producao'){
 			
 	//BANCO DE DADOS***********
 	define('DB', "mysql");
