@@ -24,15 +24,15 @@ if ( !$m_session->getValue('usuario') ) {
         switch ( $perfil ) {
 
             case 'ADM':
-                $location = "admin.php"
+                $location = "admin.php";
                 break;
 
             case 'STD':
-                $location = "student.php"
+                $location = "student.php";
                 break;
             
             default:
-                $location = "student.php"
+                $location = "student.php";
                 break;
         }
     }
