@@ -17,34 +17,57 @@ class Objetivo extends IObject{
 	private $parents = array();
 	private $children = array();	
 	private $tree;
+	private $tiposObjetivos;
 
 
 	public function __construct( $dados = null ){
 
-		parent::__construct( $dados );		
+		if( isset( $dados['id'] ) && !empty( $dados['id'] ) ){
+
+			$this->getObjeto( $dados['id'] );
+		}
+
+		$this->defineTipos();
 		
 	}
 
+	public function __set( $classe , $objeto ) {
+
+	 	foreach ( $objeto as $key => $value ) {
+
+	 		if( property_exists( $classe, $key ) ){
+
+				$value = ( empty( $value ) ) ? NULL : $value;
+				$this->$key = $value;				
+	 		}
+	 	}
+    }
+
+
+    public function __get( $name ) {
+
+	 	if( property_exists( $this, $name ) ){
+
+	 		return $this->$name;
+	 	}
+    }
 
 	protected function defineTipos(){
 
 		$this->tiposDeDados = array( 
 									'id' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
 									'nome' => array( 'type' => false, 'mandatory' => true, 'size' => 200 ),
-									'peso' => array( 'type' => 'float', 'mandatory' => false, 'size' => false ),
 									'objetivo_tipo' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
 									'parent' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
-									'leaf' => array( 'type' => false, 'mandatory' => true, 'size' => 1 ),
-									'prova' => array( 'type' => false, 'mandatory' => true, 'size' => 1),
-									'media' => array( 'type' => false, 'mandatory' => false, 'size' => false)
+									'leaf' => array( 'type' => false, 'mandatory' => true, 'size' => 1 )
 									);
 	}
 
+
 	public function getObjeto( $objetivo_id  ){
 
-		$daoObjetivo = new DaoObjetivo();
-
-		$dados = $daoObjetivo->getObjetivo( $objetivo_id );
+		$daoObjetivo = new DaoObjetivo();		
+		$dados = $daoObjetivo->buscar( $objetivo_id );
 
 		$this->__set( $this, $dados );
 	}
@@ -66,7 +89,6 @@ class Objetivo extends IObject{
 	
 
 	/*
-
 	retorna uma árvore dos os pais de um objetivo específico (inclusive o prórpio). Params: id - Recursão
 	*/
 	public function getParents(){
@@ -91,29 +113,28 @@ class Objetivo extends IObject{
 		$daoObjetivo = new DaoObjetivo();
 
 		$childrenTree = $daoObjetivo->getChildren( $this->id );
-
+		
 		if( !empty( $childrenTree[0]['children'] ) ){
 
 			$this->children[] = $childrenTree[0]['children'];
 		}
 	}
 
-
 	/*
-	Busca todos os objetivos de um determinado domínio, iniciando pelo pai até o último filho - Recursão
+	Busca todos os objetivos pai. Se recursivo, busca inclusive os filhos
 	*/
-	//public function getObjetivos( $dominio_id = null ) {
-	public function listar( $id = null ) {
+	public function listar( $recursivo = false) {
 
 		$daoObjetivo = new DaoObjetivo();
 
-		$dados = $daoObjetivo->startGetObjetivos();
+		$dados = $daoObjetivo->startGetObjetivos( $recursivo );
 
 		foreach ($dados as $value) {
 
 			$objetivo = new Objetivo();
 			$objetivo->__set( $objetivo, $value );
-			Objetivo::$instances[] = $objetivo;          
+		
+			Objetivo::$instances[] = $objetivo; 
 		}
 
 		return Objetivo::$instances;		
@@ -140,12 +161,27 @@ class Objetivo extends IObject{
     	}
     }
 
+
+    public function getTiposObjetivos(){
+
+    	$daoObjetivo = new DaoObjetivo();
+
+		$tiposObjetivos = $daoObjetivo->getTiposObjetivos();
+
+		$this->tiposObjetivos = $tiposObjetivos;
+
+		/*echo '<pre>';
+		print_r($this->tiposObjetivos);
+		echo '</pre>';*/
+    }
+
+
     /*
-    Lista a árvore de objetivos completa - Param: dominio_id
+    Lista a árvore de objetivos completa
     */
     public function listObjetivos(){
 
-
+    	//return Objetivo::$instances;
     	if( !empty( Objetivo::$instances ) ){
 
 			echo '<ul class="listObjetivos">';
@@ -315,7 +351,7 @@ class Objetivo extends IObject{
 
     	$daoObjetivo = new DaoObjetivo();
 
-		$obj_id = $daoObjetivo->insertObjetivo( $this );
+		$obj_id = $daoObjetivo->inserir( $this );
 
 		return $obj_id;
 
@@ -325,7 +361,7 @@ class Objetivo extends IObject{
 
     	$daoObjetivo = new DaoObjetivo();
 
-    	$retorno = $daoObjetivo->updateObjetivo( $this );
+    	$retorno = $daoObjetivo->editar( $this );
 
 		return $retorno;
 
@@ -336,13 +372,91 @@ class Objetivo extends IObject{
 
     	echo '<div class="col-md-2 col-sm-3 col-xs-12 header">';
 
-    	echo '<a href="objetivo.php?dmn="><button type="button" class="btn btn-primary btn-cor-primary btn-100"><i class="fa fa-plus-circle" aria-hidden="true"></i> Novo Objetivo</button></a>';
+    	echo '<a href="objetivo.php"><button type="button" class="btn btn-primary btn-cor-primary btn-100"><i class="fa fa-plus-circle" aria-hidden="true"></i> Novo Objetivo</button></a>';
 			
 		echo '</div>';
 
     }
 
 
+    public function showFormulario( Session $m_session ){
+
+    	$form = '';
+
+    	$form .= '<form id="objetivo_' . $this->__get('id') . '" method="post" action="' . $this->__get('controller') . '">';
+
+			$form .= '<input type="hidden" name="id" value="' . $this->__get('id') . '">';
+			$form .= '<input type="hidden" name="parent" value="' . $this->__get('parent') . '">';
+			$form .= '<input type="hidden" name="method" value="post">';
+			$form .= '<input type="hidden" name="action" value="salvar">';
+
+
+			$form .= '<div class="col-md-12">';
+				$form .= '<div class="form-group">';
+					$form .= '<label for="nome">Nome</label>';
+					$form .= '<input type="text" name="nome" class="form-control req" id="nome_' . $this->__get('id') . '" placeholder="Nome do objetivo" value="' . $this->__get('nome') . '">';
+				$form .= '</div>';
+			$form .= '</div>';
+
+			$form .= '<div class="col-md-4 col-sm-4 col-xs-12">';
+				$form .= '<div class="form-group">';
+					$form .= '<label for="alias">Tipo</label>';
+					$form .= '<select class="form-control req" id="objetivoTipo" name="objetivo_tipo">';
+						$form .= '<option value="">Selecione</option>';
+
+							foreach ( $this->tiposObjetivos as $objTipo ) {
+								$select = ( $objTipo['id'] == $this->__get('objetivo_tipo') ) ? ' selected ' : '';
+								$form .= '<option ' . $select . ' value="' . $objTipo['id'] . '">' . $objTipo['nome'] . '</option>';
+							}
+
+					$form .= '</select>';
+				$form .= '</div>';
+			$form .= '</div>';			
+
+			$form .= '<div class="col-md-12">';
+				$form .= '<div class="form-group">';
+					$form .= '<label for="alias">descricao</label>';
+					$form .= '<textarea class="form-control" name="descricao" rows="3" id="descricao_' . $this->__get('id') . '">' . $this->__get('descricao') . '</textarea>';
+				$form .= '</div>';
+			$form .= '</div>';
+
+			$form .= '<div class="col-md-6 col-xs-12">';
+				$form .= '<fieldset class="form-group" id="objApr">';
+
+					$form .= '<legend>Tipo</legend>';
+
+					$form .= '<div class="form-check">';
+						$form .= '<label class="form-check-label">';
+						$checked = ( $this->__get('leaf') == 'N' )? 'checked' : '';
+						$form .= '<input type="radio" class="form-check-input" name="leaf" value="N" ' . $checked . ' >';
+						$form .= 'Grupo de objetivos';
+						$form .= '</label>';
+					$form .= '</div>';
+
+					$form .= '<div class="form-check">';
+						$form .= '<label class="form-check-label">';
+						$checked = ( $this->__get('leaf') == 'S' )? 'checked' : '';
+						$form .= '<input type="radio" class="form-check-input" name="leaf" value="S" ' . $checked . ' >';
+						$form .= 'Objetivo de aprendizagem';
+						$form .= '</label>';
+					$form .= '</div>';
+
+				$form .= '</fieldset>';
+			$form .= '</div>';
+
+
+			$form .= '<div class="col-md-12">';
+				$form .= '<div class="col-md-3 col-md-offset-9 col-sm-6 col-sm-offset-6 col-xs-12">';
+					$form .= '<button type="submit" class="btn btn-primary btn-cor-primary btn-100" id="salvarObjetivo_' . $this->__get('id') . '">Salvar</button>';
+	 			$form .= '</div>';
+	 		$form .= '</div>';
+
+		$form .= '</form>';
+
+
+		echo $form;
+
+	}
 
 }
 ?>

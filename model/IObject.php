@@ -26,7 +26,7 @@ abstract class IObject{
 	public function __set( $classe , $objeto ) {
 
 	 	foreach ( $objeto as $key => $value ) {
-	 		
+
 	 		if( property_exists( $classe, $key ) ){
 
 				$value = ( empty( $value ) ) ? NULL : $value;

@@ -4,6 +4,83 @@ $( document ).ready( function(){
 	setHeightPanel_main_page();
 
 
+	//ao passar o mouse sobre o link do domínio adiciona uma classe
+	$( ".link_dominio" ).hover(
+		function() {
+			$( this ).addClass('hover');
+		}, function() {
+	    	$( this ).removeClass('hover');
+	  	}
+	);
+
+	//ao passar o mouse sobre os links no menu lateral
+	$( ".listMenu" ).hover(
+		function() {
+			$( this ).addClass('menuOver');
+			$( this ).find('a').addClass('aOver');
+		}, function() {
+	    	$( this ).removeClass('menuOver');
+	    	$( this ).find('a').removeClass('aOver');
+	  	}
+	);
+	/*
+	//clique sobre o link
+	$(".link_dominio").click( function(){
+
+		var dominio = $(this).attr('id');
+		
+		window.location = 'listObjetivos.php?dmn='+dominio;
+	});
+	*/
+
+
+
+	//sanfona exibindo os objetivos e seus filhos
+	$( document ).on( 'click', 'i[id*="folderobj_"]', function(){
+
+
+		if( $(this).parent().next('ul').hasClass('oculta') ){
+
+			$(this).removeClass('fa-folder');
+			$(this).addClass('fa-folder-open');
+			$(this).parent().next('ul').removeClass('oculta');
+
+
+		}else{
+
+			$(this).removeClass('fa-folder-open');
+			$(this).addClass('fa-folder');
+			$(this).parent().next('ul').addClass('oculta');
+		}
+
+
+	});
+
+/*
+		//Carrega o editor html no textarea com a classe "mceEditor"
+    tinyMCE.init({
+        mode : "specific_textareas",
+       
+        force_br_newlines : false,
+        force_p_newlines : false,
+        forced_root_block : '', 
+       
+        editor_selector : "mceEditor",
+        auto_focus: '',
+        height: 300,
+        plugins: [
+            'advlist autolink lists link charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime table contextmenu paste code'
+        ],
+        toolbar: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
+        content_css: [
+            '//fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
+            '//www.tinymce.com/css/codepen.min.css'
+        ]
+    });
+*/
+
 });
 
 

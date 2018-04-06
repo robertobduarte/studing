@@ -45,7 +45,7 @@ a:focus {
 }
 
 #panel_main {
-  margin-top: 70px;
+  /*margin-top: 70px;*/
   /*background: url('../img/bg.png') repeat;*/
 }
 .corposistema {
@@ -114,10 +114,8 @@ a:focus {
 .aOver {
   color: white!important;
 }
-.logoDominio {
-  padding: 15px;
-  border-top: solid 1px #0a0830;
-  border-bottom: solid 1px #0a0830;
+.logoMenuLateral {
+  padding: 25px;
 }
 .conteudo {
   z-index: 999;
@@ -127,6 +125,7 @@ a:focus {
   color: white;
   font-weight: bold;
 }
+
 .objetivo_main {
   color: #0a0830;
   font-weight: bold;

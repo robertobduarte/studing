@@ -14,7 +14,7 @@ class DaoObjetivo extends IDao {
 	public function listar(){}
 
 
-	public function startGetObjetivos() {
+	public function startGetObjetivos( $recursivo ) {
 
 		try{
 
@@ -32,19 +32,23 @@ class DaoObjetivo extends IDao {
 				$parents[] = $parent;
 			}
 
-			$tree = null;
+			if( $recursivo ){
 
-			$tree = $this->getObjetivosFilhos( $parents );
-
-			return $tree;
+				$tree = null;
+				$tree = $this->getObjetivosFilhos( $parents );
+				return $tree;
+			}
+			
+			return $parents;
 
 		}catch( Exception $e ){
 
 			$this->conex->rollback();
-			echo $e->getTraceAsString();
+			$query->falha( $error );
 		}
 
 	}
+
 
 
 	public function getObjetivosFilhos( $parents ){
@@ -56,12 +60,12 @@ class DaoObjetivo extends IDao {
 			foreach( $parents as $parent ) {
 
 				$sql = "SELECT o.*, ot.nome as tipo FROM objetivo o
-						INNER JOIN objetivo_tipo ot ON ( ot.id = o.objetivo_tipo)
-						WHERE o.parent = :parent";
+							INNER JOIN objetivo_tipo ot ON ( ot.id = o.objetivo_tipo)
+							WHERE o.parent = :parent";
 
 
 				$query = $this->conex->prepare( $sql );
-			
+				
 				$query->bindParam( ':parent', $parent['id'] );
 				$query->execute();
 
@@ -70,12 +74,12 @@ class DaoObjetivo extends IDao {
 
 					$childrens[] = $children;
 				}
-
+					
 				//apenas com as informações necessárias para listar a árvore de objetivos
 				$tree[] = array('id' => $parent['id'], 'nome' => $parent['nome'], 'tipo' => $parent['tipo'], 'leaf' => $parent['leaf'], 'parent' => $parent['parent'], 'children' => $this->getObjetivosFilhos( $childrens ) );
-				
+					
 			}
-			
+						
 			return $tree;
 
 		}catch( Exception $e ){
@@ -85,6 +89,7 @@ class DaoObjetivo extends IDao {
 
 		}
 	}
+	
 
 
 
@@ -176,7 +181,7 @@ class DaoObjetivo extends IDao {
 
 			$tree = null;
 			$tree = $this->getObjetivosFilhos( array( $objetivo ) );			
-			
+
 			return $tree;
 
 		}catch( Exception $e ){
@@ -289,6 +294,7 @@ class DaoObjetivo extends IDao {
 
 			$query->bindParam( ':nome', $objetivo->__get('nome') );
 			$query->bindParam( ':descricao', $objetivo->__get('descricao') );
+			$query->bindParam( ':objetivo_tipo', $objetivo->__get('objetivo_tipo') );
 			$query->bindParam( ':leaf', $objetivo->__get('leaf') );
 			$query->bindParam( ':parent', $objetivo->__get('parent') );
 			$query->bindParam( ':id', $objetivo->__get('id') );
@@ -333,7 +339,35 @@ class DaoObjetivo extends IDao {
 	}
 
 
-	
+	/*
+	Lista todos os tipos de objetivos
+	*/
+	public function getTiposObjetivos(){
+
+		try {
+
+            $sql = "SELECT id, nome FROM objetivo_tipo";
+			
+			$query = $this->conex->prepare( $sql );
+
+            $query->execute(); 
+            
+            $tiposObjetivos = array();
+
+            while( $tipoObj = $query->fetch( PDO::FETCH_ASSOC ) ){
+
+            	$tiposObjetivos[] = $tipoObj;
+            }
+			
+			return $tiposObjetivos;
+
+        } catch (Exception $e) {
+
+            $this->conex->rollback();
+            echo $e->getTraceAsString();
+        }
+
+	}	
 
 }
 ?>

@@ -1,6 +1,4 @@
-			<?php
-
-			?>
+<?php ?>
 
 				</div> <!-- .container corposistema -->
 

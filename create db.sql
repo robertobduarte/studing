@@ -34,11 +34,30 @@ CREATE TABLE objetivo (
     descricao TEXT,
     objetivo_tipo INT,
     parent INT,
-    leaf char(1) NOT NULL DEFAULT 'S'
+    leaf char(1) NOT NULL DEFAULT 'S',
+    ordem int default null
 );
 
 
 CREATE TABLE objetivo_tipo (
-    id INT NOT NULL primary key,
+    id INT NOT NULL primary key auto_increment,
     nome VARCHAR(200) NOT NULL
 );
+
+ALTER TABLE objetivo_tipo
+CHANGE COLUMN id id INT(11) NOT NULL AUTO_INCREMENT;
+
+
+#criação de objetivos
+insert into objetivo (nome, descricao, objetivo_tipo, parent, leaf) values
+('4º Ano', 'Reforçar os conhecimentos adquiridos no quarto ano no colégio Gensa - Gravataí', 1, null, 'N'),
+('1 Trimestre', 'Reforçar os conhecimentos adquiridos no 1º trimestre', 3, 1, 'S'),
+('2 Trimestre', 'Reforçar os conhecimentos adquiridos no 2º trimestre', 3, 1, 'S'),
+('3 Trimestre', 'Reforçar os conhecimentos adquiridos no 3º trimestre', 3, 1, 'S');
+
+#criação de objetivo tipo
+insert into objetivo_tipo (nome) values
+('Ano letivo'), 
+('Semestre'),
+('Trimestre'),
+('Bimestre');

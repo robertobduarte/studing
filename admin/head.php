@@ -79,6 +79,6 @@ $perfilNome = $m_session->getValue( 'perfil_nome' );
 
 	<div class="container-fluid" id="panel_main">
 		
-		<div class="container corposistema">
+		<div class="corposistema">
 
 		

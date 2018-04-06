@@ -42,6 +42,8 @@ abstract class Icontroller {
         */
             
         } 
+        $this->action = $this->dados['action'];
+        $this->method = $this->dados['method']; 
 
         $this->m_autenticacao = new Autenticacao();
         $this->m_autenticacao->checkAcess();
