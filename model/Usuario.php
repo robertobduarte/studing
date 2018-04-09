@@ -9,8 +9,7 @@ class Usuario extends IObject{
 	protected $usuario;
 	protected $perfil;
 	protected $perfil_nome;
-	protected $perfil_dominio = array();
-	protected $permissoes = array();
+	protected $permissao;
 
 
 	public function __construct( $dados = null ){
@@ -43,7 +42,6 @@ class Usuario extends IObject{
 		$daoUsuario = new DaoUsuario();
 
 		$usuario = $daoUsuario->getUsuarioByUser( $userName );
-	
 
 		$this->__set( $this, $usuario );
 
@@ -67,7 +65,18 @@ class Usuario extends IObject{
 	}
 
 
+	/*
+	retorna um array com as permissões que o perfil possui. Pode ser o perfil geral (do sistema) ou o perfil de uma determinado domínio.
+	*/
+	public function getPermissoes( $perfil ){
 
+		$daoUsuario = new DaoUsuario();
+
+		$permissoes = $daoUsuario->getPermissoesPerfil( $perfil );
+
+		$this->permissao = $permissoes;
+
+	}
 
 
 }

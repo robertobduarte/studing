@@ -14,16 +14,17 @@ class DaoObjetivo extends IDao {
 	public function listar(){}
 
 
-	public function startGetObjetivos( $recursivo ) {
-
+	public function startGetObjetivos( $dominio, $recursivo ) {
+		
 		try{
 
 			$sql = "SELECT o.*, ot.nome as tipo FROM objetivo o
 					INNER JOIN objetivo_tipo ot ON ( ot.id = o.objetivo_tipo)
-					WHERE parent IS NULL";
+					WHERE o.dominio = :dominio AND parent IS NULL";
 			
 			$query = $this->conex->prepare( $sql );
-		
+			$query->bindParam( ':dominio', $dominio );
+
 			$query->execute();
 
 			$parents = array();			
@@ -44,7 +45,7 @@ class DaoObjetivo extends IDao {
 		}catch( Exception $e ){
 
 			$this->conex->rollback();
-			$query->falha( $error );
+			$query->falha( $e );
 		}
 
 	}
@@ -76,7 +77,7 @@ class DaoObjetivo extends IDao {
 				}
 					
 				//apenas com as informações necessárias para listar a árvore de objetivos
-				$tree[] = array('id' => $parent['id'], 'nome' => $parent['nome'], 'tipo' => $parent['tipo'], 'leaf' => $parent['leaf'], 'parent' => $parent['parent'], 'children' => $this->getObjetivosFilhos( $childrens ) );
+				$tree[] = array('id' => $parent['id'], 'nome' => $parent['nome'], 'tipo' => $parent['tipo'], 'ordem' => $parent['ordem'], 'leaf' => $parent['leaf'], 'parent' => $parent['parent'], 'children' => $this->getObjetivosFilhos( $childrens ) );
 					
 			}
 						
@@ -110,7 +111,7 @@ class DaoObjetivo extends IDao {
 			
 			if( !empty( $objeto ) ) {
 
-				$pathToParent[] = array( 'id' => $objeto['id'], 'nome' => $objeto['nome'], 'tipo' => $objeto['tipo'] );
+				$pathToParent[] = array( 'id' => $objeto['id'], 'nome' => $objeto['nome'], 'ordem' => $objeto['ordem'] , 'tipo' => $objeto['tipo'] );
 
 				$this->getParent( $objeto['parent'], $pathToParent ); 
 			}
@@ -254,8 +255,8 @@ class DaoObjetivo extends IDao {
 
 		try{
 
-			$sql = "INSERT INTO objetivo ( nome, descricao, objetivo_tipo, leaf, parent ) 
-					VALUES ( :nome, :descricao, :objetivo_tipo, :leaf, :parent )";
+			$sql = "INSERT INTO objetivo ( nome, descricao, objetivo_tipo, dominio, leaf, parent, ordem ) 
+					VALUES ( :nome, :descricao, :objetivo_tipo, :dominio, :leaf, :parent, :ordem )";
 
 			$this->conex->beginTransaction();
 
@@ -263,7 +264,9 @@ class DaoObjetivo extends IDao {
 			$query->bindParam( ':nome', $objetivo->__get('nome') );
 			$query->bindParam( ':descricao', $objetivo->__get('descricao') );
 			$query->bindParam( ':objetivo_tipo', $objetivo->__get('objetivo_tipo') );
+			$query->bindParam( ':dominio', $objetivo->__get('dominio') );
 			$query->bindParam( ':leaf', $objetivo->__get('leaf') );
+			$query->bindParam( ':ordem', $objetivo->__get('ordem') );
 			$query->bindParam( ':parent', $objetivo->__get('parent') );
 
 			$query->execute();
@@ -286,7 +289,7 @@ class DaoObjetivo extends IDao {
 		try{
 
 			$sql = "UPDATE objetivo	SET 
-					nome = :nome, descricao = :descricao, objetivo_tipo = :objetivo_tipo, leaf = :leaf, parent = :parent
+					nome = :nome, descricao = :descricao, objetivo_tipo = :objetivo_tipo, leaf = :leaf, parent = :parent, ordem = :ordem
 					WHERE id = :id";
 
 			$this->conex->beginTransaction();
@@ -297,6 +300,7 @@ class DaoObjetivo extends IDao {
 			$query->bindParam( ':objetivo_tipo', $objetivo->__get('objetivo_tipo') );
 			$query->bindParam( ':leaf', $objetivo->__get('leaf') );
 			$query->bindParam( ':parent', $objetivo->__get('parent') );
+			$query->bindParam( ':ordem', $objetivo->__get('ordem') );
 			$query->bindParam( ':id', $objetivo->__get('id') );
 
 			$query->execute();

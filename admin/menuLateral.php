@@ -1,11 +1,12 @@
 <?php
 
-//$menus = $m_autenticacao->listMenu( true, 'L');
-$menus = array();
+$menus = $m_autenticacao->listMenu( true);
 
-//$menuSelected = $m_session->getValue( 'menu', true );
-/*
-echo '<pre>';
+
+$menuSelected = $m_session->getValue( 'menu', true );
+
+/*echo '<pre>';
+echo $m_session->getValue('perfil');
 print_r($menus);
 echo '</pre>';
 */
@@ -14,7 +15,7 @@ echo '</pre>';
 <div class="menu_lateral">	
 
 	<div class="logoMenuLateral">
-		<a href="listObjetivos.php" class="" >			
+		<a href="listObjetivos.php?dmn=<?=$m_dominio->__get('id')?>" class="" >			
 			<img src="img/logo.png" class="img-responsive" >
 		</a>
 	</div>

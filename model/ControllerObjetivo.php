@@ -15,7 +15,7 @@ class ControllerObjetivo extends Icontroller {
 	protected function definePropriedades(){
 
 		$this->m_object = new Objetivo();
-		$this->destinoDefault = '../admin/listObjetivos.php';
+		$this->destinoDefault = '../admin/listObjetivos.php?dmn=' . $this->m_session->getValue( 'dominio' );
 		$this->mensagemDefault = 'Erro! Não foi possível completar a ação.';
 	}
 

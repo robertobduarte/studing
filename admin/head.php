@@ -1,14 +1,11 @@
 <?php 
 include_once __DIR__ . "/../config.php";
 
+$m_session = new Session();
 $m_autenticacao = new Autenticacao();
 $m_autenticacao->checkAcess();
 
-$m_session = new Session();
-$usuarioNome = $m_session->getValue( 'nome' );
-$usuario = $m_session->getValue( 'usuario' );
-$perfil = $m_session->getValue( 'perfil' );
-$perfilNome = $m_session->getValue( 'perfil_nome' );
+$menus = $m_autenticacao->listMenu();
 
 ?>
 
@@ -53,7 +50,7 @@ $perfilNome = $m_session->getValue( 'perfil_nome' );
 			<div class="collapse navbar-collapse col-md-8 col-sm-12" id="menu">				
 				<ul class="nav navbar-nav">	
 					<?php
-					/* 
+					
 					foreach($menus as $menu){
 						if($menu['submenu'] == 'S'){
 							echo '<li class="dropdown">';
@@ -68,7 +65,7 @@ $perfilNome = $m_session->getValue( 'perfil_nome' );
 							echo '<li class="nav-item"><a href="' . $menu['caminho'] . '">' . $menu['label'].'</a></li>';
 						}					
 					}
-					*/
+					
 					?>				
 				</ul>				
 			</div><!-- /.navbar-collapse -->			

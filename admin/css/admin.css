@@ -74,6 +74,7 @@ a:focus {
 }
 .img-dominio {
   padding: 20px;
+  width: 100%;
 }
 .label-dominio {
   color: gray;

@@ -2,13 +2,16 @@
 include_once __DIR__ . "/head.php";
 
 $objetivo_id = ( isset( $_REQUEST['obj'] ) )? $_REQUEST['obj'] : '';
+$dominio_id = ( isset( $_REQUEST['dmn'] ) )? $_REQUEST['dmn'] : '';
 $parent_id = ( isset( $_REQUEST['prt'] ) )? $_REQUEST['prt'] : '';
 
-if( empty( $objetivo_id ) ){
+
+if( empty( $objetivo_id ) && empty( $dominio_id ) ){
 
 	header("location: acessonegado.php");
 	exit();	
 }
+
 
 if( !empty( $objetivo_id ) ){
 
@@ -18,14 +21,17 @@ if( !empty( $objetivo_id ) ){
 	$m_objetivo->setTree();
 	$m_objetivo->getChildren();
 
+	$m_dominio = new Dominio( array('id' => $m_objetivo->__get( 'dominio' ) ) );
+
 }else{
 
 	$m_objetivo = new Objetivo();
+	$m_objetivo->__set( 'Objetivo', array( 'dominio' => $dominio_id ) );
+	$m_dominio = new Dominio( array('id' => $dominio_id ) );
 
 	if( !empty( $parent_id ) ){
 
 		$m_objetivo->__set( 'Objetivo', array( 'parent' => $parent_id ) );
-
 	}
 
 	$m_objetivoParent = new Objetivo( array( 'id' => $parent_id ) );
@@ -35,6 +41,14 @@ if( !empty( $objetivo_id ) ){
 }
 
 $m_objetivo->getTiposObjetivos();
+
+if( !$m_autenticacao->checkAcessDominio( $m_dominio->__get( 'id' ) ) ){
+
+	$m_session->setValue( 'mensagem', 'Acesso não permitido para este domíno.' );
+	header("location: acessonegado.php");
+	exit();
+}
+
 
 ?>
 
@@ -100,10 +114,11 @@ $m_objetivo->getTiposObjetivos();
 			</section> <!-- #objetivosfilhos -->
 
 
-			<!-- <form id="novoObj" method="POST">
-				<input type="hidden" name="prt" value="<? $m_objetivo->id ?>">
+			<form id="novoObj" method="POST">
+				<input type="hidden" name="prt" value="<?= $m_objetivo->id ?>">
+				<input type="hidden" name="dmn" value="<?= $m_dominio->id ?>">
 				<input type="hidden" name="action" value="">
-			</form> -->
+			</form>
 
 		</div> <!-- .corpoPage -->
 

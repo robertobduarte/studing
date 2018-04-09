@@ -1,8 +1,33 @@
 <?php
 include_once __DIR__ . "/head.php";
 
+$dominio_id = (isset($_REQUEST['dmn']))? $_REQUEST['dmn'] : '';
+$m_dominio = new Dominio( array('id' => $dominio_id ) );
+$m_session->setValue('dominio', $dominio_id );
+
+$m_session->setValue( 'menu', '1' );
+
+
+$m_session->setValue('dominio', $dominio_id );
+
+if( empty( $m_dominio->__get( 'id' ) ) ){
+	$m_session->setValue( 'mensagem', 'Parâmetros incorretos.' );
+	header("location: acessonegado.php");
+	exit();
+}
+
+if( !$m_autenticacao->checkAcessDominio( $m_dominio->__get( 'id' ) ) ){
+
+	$m_session->setValue( 'mensagem', 'Acesso não permitido para este domíno.' );
+	header("location: acessonegado.php");
+	exit();
+}
+
+$m_session->setValue( 'menu', '1' );
+
 $m_objetivo = new Objetivo();
-$m_objetivo->listar(true);
+$m_objetivo->__set( 'Objetivo', array( 'dominio' => $m_dominio->__get('id') ) );
+$m_objetivo->listar($dominio_id, true);
 
 ?>
 

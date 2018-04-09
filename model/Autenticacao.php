@@ -26,6 +26,7 @@ class Autenticacao{
 			$this->m_session->setValue( 'perfil', $this->m_usuario->__get('perfil') );
 			$this->m_session->setValue( 'nome', $this->m_usuario->__get('nome') );
 			$this->m_session->setValue( 'perfil_nome', $this->m_usuario->__get('perfil_nome') );
+			$this->m_session->setValue( 'permissao', $this->m_usuario->__get('permissao') );
 		}		
 	}
 
@@ -99,7 +100,64 @@ class Autenticacao{
 	}
 
 
+	/*
+	retorna uma listagem de menus que o usuário tem permissão
+	*/
+	public function listMenu( $dominio ){
+		
+		$daoMenu = new DaoMenu();
+		$menus = $daoMenu->listMenu( $this->m_session->getValue('perfil'), $dominio );				
+		
+		return $menus;
 
+	}
+
+
+		/*
+	Verifia se o usuário logado em permissão para acessar um dominio
+	*/
+	public function checkAcessDominio( $dominio_id ){
+
+		$m_usuario = new Usuario();
+
+		$perfil = $this->m_session->getValue('perfil');
+		$perfil_nome = $this->m_session->getValue('perfil_nome');
+		$usuarioid = $this->m_session->getValue('usuarioid');
+
+		if( in_array( $perfil, array( 'ADM' ) ) ){
+
+			$m_usuario->getPermissoes( $perfil );
+			$this->m_session->setValue( 'perfil_dominio', $perfil );
+			$this->m_session->setValue( 'perfil_nome_dominio', $perfil_nome );
+			$this->m_session->setValue( 'permissoes', $m_usuario->__get('permissoes') );
+			$this->m_session->setValue( 'dominio', $dominio_id );
+			return true;
+
+		}else{
+			/*
+			retorna o perfil do usuário para o domínio. Se retornar vazio o usuário não tem acesso 
+			*/
+			$daoUsuario = new DaoUsuario();
+
+			$perfilDominio = $daoUsuario->checkAcessDominio( $dominio_id,  $usuarioid );
+
+			if( empty( $perfilDominio ) ){
+
+				return false;
+			}
+
+			$m_usuario->getPermissoes( $perfilDominio['perfil'] );
+			$this->m_session->setValue( 'perfil_dominio', $perfilDominio['perfil'] );
+			$this->m_session->setValue( 'perfil_nome_dominio', $perfilDominio['nome'] );
+			$this->m_session->setValue( 'permissao_dominio', $m_usuario->__get('permissao') );
+			$this->m_session->setValue( 'dominio', $dominio_id );
+			return true;
+
+		}	
+
+	}
+
+	
 	public function unscramble( $str ) {
 
 		$SCR2 = 'ABCDEFGH-IJKLMNOPQRST_UVWXYZ.abcdefghijklmnopqrstuvwxyz';

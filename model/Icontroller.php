@@ -34,12 +34,12 @@ abstract class Icontroller {
                     
                 $this->dados[ $key ] = $value;
             }
-        /*
-        echo "<pre>";
+        
+        /*echo "<pre>";
         print_r($this->dados);
         echo "</pre>";
-        exit();
-        */
+        exit();*/
+        
             
         } 
         $this->action = $this->dados['action'];
@@ -59,7 +59,7 @@ abstract class Icontroller {
     abstract protected function startAction();
     
 
-    protected function checkParams(){
+    protected function checkParams(){        
 
         if( empty( $this->dados['action'] ) ){
 

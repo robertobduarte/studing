@@ -8,7 +8,9 @@ class Objetivo extends IObject{
 	protected $controller = '../controller/controllerObjetivo.php';
 	private $id;
 	private $nome;
+	private $dominio;
 	private $descricao;
+	private $ordem;
 	private $objetivo_tipo;
 	private $tipo;
 	private $leaf;	
@@ -57,6 +59,7 @@ class Objetivo extends IObject{
 		$this->tiposDeDados = array( 
 									'id' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
 									'nome' => array( 'type' => false, 'mandatory' => true, 'size' => 200 ),
+									'dominio' => array( 'type' => 'int', 'mandatory' => true, 'size' => false ),
 									'objetivo_tipo' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
 									'parent' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
 									'leaf' => array( 'type' => false, 'mandatory' => true, 'size' => 1 )
@@ -123,11 +126,13 @@ class Objetivo extends IObject{
 	/*
 	Busca todos os objetivos pai. Se recursivo, busca inclusive os filhos
 	*/
-	public function listar( $recursivo = false) {
+	public function listar( $dominio_id = null, $recursivo = false ) {
+
+		$dominio = ( $dominio_id == null )? $this->dominio : $dominio_id;
 
 		$daoObjetivo = new DaoObjetivo();
 
-		$dados = $daoObjetivo->startGetObjetivos( $recursivo );
+		$dados = $daoObjetivo->startGetObjetivos( $dominio, $recursivo );
 
 		foreach ($dados as $value) {
 
@@ -372,7 +377,7 @@ class Objetivo extends IObject{
 
     	echo '<div class="col-md-2 col-sm-3 col-xs-12 header">';
 
-    	echo '<a href="objetivo.php"><button type="button" class="btn btn-primary btn-cor-primary btn-100"><i class="fa fa-plus-circle" aria-hidden="true"></i> Novo Objetivo</button></a>';
+    	echo '<a href="objetivo.php?dmn=' . $this->dominio . '"><button type="button" class="btn btn-primary btn-cor-primary btn-100"><i class="fa fa-plus-circle" aria-hidden="true"></i> Novo Objetivo</button></a>';
 			
 		echo '</div>';
 
@@ -386,6 +391,7 @@ class Objetivo extends IObject{
     	$form .= '<form id="objetivo_' . $this->__get('id') . '" method="post" action="' . $this->__get('controller') . '">';
 
 			$form .= '<input type="hidden" name="id" value="' . $this->__get('id') . '">';
+			$form .= '<input type="hidden" name="dominio" value="' . $this->__get('dominio') . '">';
 			$form .= '<input type="hidden" name="parent" value="' . $this->__get('parent') . '">';
 			$form .= '<input type="hidden" name="method" value="post">';
 			$form .= '<input type="hidden" name="action" value="salvar">';
@@ -398,7 +404,14 @@ class Objetivo extends IObject{
 				$form .= '</div>';
 			$form .= '</div>';
 
-			$form .= '<div class="col-md-4 col-sm-4 col-xs-12">';
+			$form .= '<div class="col-md-2 col-sm-3 col-xs-12">';
+				$form .= '<div class="form-group">';
+					$form .= '<label for="ordem">Ordem</label>';
+					$form .= '<input type="text" name="ordem" class="form-control req" id="ordem_' . $this->__get('id') . '" placeholder="Ordem" value="' . $this->__get('ordem') . '">';
+				$form .= '</div>';
+			$form .= '</div>';
+
+			$form .= '<div class="col-md-3 col-sm-4 col-xs-12">';
 				$form .= '<div class="form-group">';
 					$form .= '<label for="alias">Tipo</label>';
 					$form .= '<select class="form-control req" id="objetivoTipo" name="objetivo_tipo">';
