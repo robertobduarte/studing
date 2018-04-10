@@ -20,18 +20,31 @@ class DaoMenu extends IDao{
 		$dominio = ( $dominio )? 'S' : 'N';
 
         try {
-           
-            $sql = "SELECT * FROM menu as m
-					INNER JOIN menu_perfil as mp on (mp.menu = m.id)			
-					WHERE m.pai is null 
-					AND mp.perfil = :perfil
-					AND m.dominio = :dominio
-					ORDER BY m.ordem";
+ 
+			if( $perfil == 'ADM' ){
 
-			$query = $this->conex->prepare( $sql );
-			$query->bindParam( ':perfil', trim( $perfil ) );
-			$query->bindParam( ':dominio', $dominio ); 
-			
+				$sql = "SELECT DISTINCT(m.id), m.* FROM menu as m			
+						WHERE m.pai is null 					
+						AND m.dominio = :dominio 
+						ORDER BY m.ordem";
+
+				$query = $this->conex->prepare( $sql );
+				$query->bindParam( ':dominio', $dominio ); 
+
+			}else{
+
+				$sql = "SELECT DISTINCT(m.id), m.* FROM menu as m
+						INNER JOIN menu_perfil as mp on (mp.menu = m.id)			
+						WHERE m.pai is null 					
+						AND m.dominio = :dominio and
+						IF( m.dominio = 'S', mp.perfil = :perfil, mp.perfil <> '' )
+						ORDER BY m.ordem";
+
+				$query = $this->conex->prepare( $sql );
+				$query->bindParam( ':perfil', trim( $perfil ) );
+				$query->bindParam( ':dominio', $dominio ); 
+			}
+           
 			$query->execute(); 
             
 
@@ -48,7 +61,8 @@ class DaoMenu extends IDao{
 
         } catch (Exception $e) {
             $this->conex->rollback();
-			$query->falha( $e );
+            print_r( $this->conex->errorInfo() );
+			//$this->conex->falha( $this->conex->errorInfo() );
         }
     }	
 
@@ -57,15 +71,27 @@ class DaoMenu extends IDao{
 
       	try {
           	
-          	$sql = "SELECT * FROM menu m
+          	if( $perfil == 'ADM' ){
+
+				$sql = "SELECT * FROM menu m
+          			WHERE m.pai = :pai
+          			ORDER BY m.ordem";
+
+				$query = $this->conex->prepare($sql);
+				$query->bindParam( ':pai', $pai );
+
+			}else{
+
+				$sql = "SELECT * FROM menu m
           			INNER JOIN menu_perfil as mp on (mp.menu = m.id)
           			WHERE m.pai = :pai 
           			AND mp.perfil = :perfil 
           			ORDER BY m.ordem";
 
-			$query = $this->conex->prepare($sql);
-			$query->bindParam( ':pai', $pai );
-			$query->bindParam( ':perfil', trim($perfil) );
+				$query = $this->conex->prepare($sql);
+				$query->bindParam( ':pai', $pai );
+				$query->bindParam( ':perfil', trim($perfil) );
+			}
 
 
             $query->execute(); 

@@ -35,6 +35,7 @@ CREATE TABLE objetivo (
     objetivo_tipo INT,
     parent INT,
     leaf char(1) NOT NULL DEFAULT 'S',
+    dominio int NOT NULL,
     ordem int default null
 );
 
@@ -106,11 +107,11 @@ insert into usuario (usuario, perfil, pessoa, password) values
 ('azambuja@professor.com', 'PRF', 3, 123), ('gensa@professor.com', 'PRF', 4, 123);
 
 #criação de objetivos
-insert into objetivo (nome, descricao, objetivo_tipo, parent, leaf) values
-('4º Ano', 'Reforçar os conhecimentos adquiridos no quarto ano no colégio Gensa - Gravataí', 1, null, 'N'),
-('1 Trimestre', 'Reforçar os conhecimentos adquiridos no 1º trimestre', 3, 1, 'S'),
-('2 Trimestre', 'Reforçar os conhecimentos adquiridos no 2º trimestre', 3, 1, 'S'),
-('3 Trimestre', 'Reforçar os conhecimentos adquiridos no 3º trimestre', 3, 1, 'S');
+insert into objetivo (nome, descricao, objetivo_tipo, parent, leaf, dominio) values
+('4º Ano', 'Reforçar os conhecimentos adquiridos no quarto ano no colégio Gensa - Gravataí', 1, null, 'N', 1),
+('1 Trimestre', 'Reforçar os conhecimentos adquiridos no 1º trimestre', 3, 1, 'S', 1 ),
+('2 Trimestre', 'Reforçar os conhecimentos adquiridos no 2º trimestre', 3, 1, 'S', 1),
+('3 Trimestre', 'Reforçar os conhecimentos adquiridos no 3º trimestre', 3, 1, 'S', 1);
 
 #criação de objetivo tipo
 insert into objetivo_tipo (nome) values

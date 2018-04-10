@@ -3,10 +3,12 @@ include_once __DIR__ . "/../config.php";
 
 $m_session = new Session();
 $m_autenticacao = new Autenticacao();
+
+//verifica se está logado
 $m_autenticacao->checkAcess();
 
+//busca os menus que não se referem a domínio
 $menus = $m_autenticacao->listMenu();
-
 ?>
 
 <!DOCTYPE html>
@@ -74,7 +76,7 @@ $menus = $m_autenticacao->listMenu();
 	</nav>
 
 
-	<div class="container-fluid" id="panel_main">
+	<div class="container" id="panel_main">
 		
 		<div class="corposistema">
 

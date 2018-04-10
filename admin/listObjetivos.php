@@ -1,13 +1,8 @@
 <?php
-include_once __DIR__ . "/head.php";
+include_once __DIR__ . "/headDominio.php"; //página instancia um dominio - $m_dominio
 
-$dominio_id = (isset($_REQUEST['dmn']))? $_REQUEST['dmn'] : '';
+/*$dominio_id = (isset($_REQUEST['dmn']))? $_REQUEST['dmn'] : '';
 $m_dominio = new Dominio( array('id' => $dominio_id ) );
-$m_session->setValue('dominio', $dominio_id );
-
-$m_session->setValue( 'menu', '1' );
-
-
 $m_session->setValue('dominio', $dominio_id );
 
 if( empty( $m_dominio->__get( 'id' ) ) ){
@@ -16,18 +11,13 @@ if( empty( $m_dominio->__get( 'id' ) ) ){
 	exit();
 }
 
-if( !$m_autenticacao->checkAcessDominio( $m_dominio->__get( 'id' ) ) ){
-
-	$m_session->setValue( 'mensagem', 'Acesso não permitido para este domíno.' );
-	header("location: acessonegado.php");
-	exit();
-}
+$m_autenticacao->checkAcessDominio( $m_dominio->__get( 'id' ) );*/
 
 $m_session->setValue( 'menu', '1' );
 
 $m_objetivo = new Objetivo();
 $m_objetivo->__set( 'Objetivo', array( 'dominio' => $m_dominio->__get('id') ) );
-$m_objetivo->listar($dominio_id, true);
+$m_objetivo->listar($m_dominio->__get('id'), true);
 
 ?>
 

@@ -1,6 +1,5 @@
 <?php
-include_once __DIR__ . "/head.php";
-
+include_once __DIR__ . "/headHome.php";
 
 $m_dominio = new Dominio();
 $dominios = $m_dominio->getDominiosUsuario();
@@ -21,29 +20,26 @@ if( empty( $dominios ) ){
 }
 ?>
 
-<div class="container">
-	<div class="row panel_main_page">
+<div class="row panel_main_page">
 
-		<div class="col-md-12 panel_conteudo">
+	<div class="col-md-12 panel_conteudo">
 
-			<?//_('ola mundo')?>
-			<?php foreach ( $dominios as $dominio ) { ?>
+		<?php foreach ( $dominios as $dominio ) { ?>
 			
-				<div class="col-md-4 col-sm-6 col-xs-12 packshot">
-					<a href="listObjetivos.php?dmn=<?= $dominio->__get( 'id' ); ?>">
-						<div class="link_dominio" id="<?= $dominio->__get( 'id' ); ?>">
-							<img src="../dominio/<?php echo $dominio->__get( 'diretorio' ); ?>/logo.png" class="img-responsive img-dominio" >
-							<h3 class="label-dominio"><?= $dominio->__get( 'nome' ); ?></h3>
-						</div>
-					</a>
-				</div>
+			<div class="col-md-4 col-sm-6 col-xs-12 packshot">
+				<a href="listObjetivos.php?dmn=<?= $dominio->__get( 'id' ); ?>">
+					<div class="link_dominio" id="<?= $dominio->__get( 'id' ); ?>">
+						<img src="../dominio/<?php echo $dominio->__get( 'diretorio' ); ?>/logo.png" class="img-responsive img-dominio" >
+						<h3 class="label-dominio"><?= $dominio->__get( 'nome' ); ?></h3>
+					</div>
+				</a>
+			</div>
 
-			<? } ?>
+		<? } ?>
 
-		</div><!-- .panel_conteudo -->
+	</div><!-- .panel_conteudo -->
 
-	</div><!-- .panel_main_page -->
-</div><!-- .container -->
+</div><!-- .panel_main_page -->
 
 <?php include_once __DIR__ . "/footer.php"; ?>
 

@@ -1,13 +1,14 @@
 <?php
-include_once __DIR__ . "/head.php";
+include_once __DIR__ . "/headDominio.php"; //página instancia um dominio - $m_dominio
+
 
 $objetivo_id = ( isset( $_REQUEST['obj'] ) )? $_REQUEST['obj'] : '';
-$dominio_id = ( isset( $_REQUEST['dmn'] ) )? $_REQUEST['dmn'] : '';
 $parent_id = ( isset( $_REQUEST['prt'] ) )? $_REQUEST['prt'] : '';
 
 
-if( empty( $objetivo_id ) && empty( $dominio_id ) ){
+if( empty( $objetivo_id ) && empty( $m_dominio->__get('id') ) ){
 
+	$m_session->setValue( 'mensagem', 'Parâmetros incorretos.' );
 	header("location: acessonegado.php");
 	exit();	
 }
@@ -26,8 +27,8 @@ if( !empty( $objetivo_id ) ){
 }else{
 
 	$m_objetivo = new Objetivo();
-	$m_objetivo->__set( 'Objetivo', array( 'dominio' => $dominio_id ) );
-	$m_dominio = new Dominio( array('id' => $dominio_id ) );
+	$m_objetivo->__set( 'Objetivo', array( 'dominio' => $m_dominio->__get('id') ) );
+	$m_dominio = new Dominio( array('id' => $m_dominio->__get('id') ) );
 
 	if( !empty( $parent_id ) ){
 
@@ -41,14 +42,6 @@ if( !empty( $objetivo_id ) ){
 }
 
 $m_objetivo->getTiposObjetivos();
-
-if( !$m_autenticacao->checkAcessDominio( $m_dominio->__get( 'id' ) ) ){
-
-	$m_session->setValue( 'mensagem', 'Acesso não permitido para este domíno.' );
-	header("location: acessonegado.php");
-	exit();
-}
-
 
 ?>
 

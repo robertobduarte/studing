@@ -215,7 +215,7 @@ class Objetivo extends IObject{
 							$icone = '';
 						}
 
-						echo '<li class="list-unstyled objetivo_main ' . $classe . '">' . $icone .  '<a href="objetivo.php?obj=' . $objetivo->id . '" id="objetivo_' . $objetivo->id . '" class="linkObjetivo">' . $objetivo->tipo . ': ' . $objetivo->nome . '</a></li>';
+						echo '<li class="list-unstyled objetivo_main ' . $classe . '">' . $icone .  '<a href="objetivo.php?obj=' . $objetivo->id . '&dmn=' . $objetivo->dominio. '" id="objetivo_' . $objetivo->id . '" class="linkObjetivo">' . $objetivo->tipo . ': ' . $objetivo->nome . '</a></li>';
 
 						if( $objetivo->leaf == 'N' ){
 
@@ -270,7 +270,7 @@ class Objetivo extends IObject{
 						$icone = ' <i class="fa fa-book" aria-hidden="true"></i> ';
 					}
 
-					echo '<li class="list-unstyled objetivo_children ' . $classe . '">' . $icone . ' <a href="objetivo.php?obj=' . $children[$i]['id'] . '" id="objetivo_' . $children[$i]['id'] . '" class="linkObjetivo">' . $children[$i]['tipo'] . ': ' . $children[$i]['nome'] . '</a></li>'; 
+					echo '<li class="list-unstyled objetivo_children ' . $classe . '">' . $icone . ' <a href="objetivo.php?obj=' . $children[$i]['id'] . '&dmn=' . $children[$i]['dominio']. '" id="objetivo_' . $children[$i]['id'] . '" class="linkObjetivo">' . $children[$i]['tipo'] . ': ' . $children[$i]['nome'] . '</a></li>'; 
 
 					if( $children[$i]['leaf'] == 'N' ){
 

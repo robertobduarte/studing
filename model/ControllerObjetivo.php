@@ -3,7 +3,6 @@ include_once __DIR__ . "/../config.php";
 
 class ControllerObjetivo extends Icontroller {
 
-
 	protected $name_session = 'form_Objetivo';
 
 	function __construct(){
@@ -26,10 +25,10 @@ class ControllerObjetivo extends Icontroller {
 
 			case 'salvar':
 
-				/*if ( !array_intersect( array( 'C', 'U' ), $this->m_session->getValue( 'permissoes' ) )){
+				if( !$this->m_autenticacao->hasPermission( array( 'C', 'U' ) ) ){
 
 					$this->redirect( array( 'msg' => 'Usuário sem permissão para esta ação.' ) );					
-				}*/
+				}
 
 				$this->salvar();
 				break;
@@ -63,11 +62,11 @@ class ControllerObjetivo extends Icontroller {
 
 			if( !$retorno ){
 
-				$this->redirect( array( 'msg' => 'Erro ao gravar objetivo.', 'dst' => '../admin/objetivo.php?obj=' . $this->m_object->__get('id') ) );		
+				$this->redirect( array( 'msg' => 'Erro ao gravar objetivo.', 'dst' => '../admin/objetivo.php?obj=' . $this->m_object->__get('id') . '&dmn=' . $this->m_object->__get('dominio') ) );		
 			}
 		}
 
-		$this->redirect( array( 'msg' => 'Objetivo gravado com sucesso.', 'dst' => '../admin/objetivo.php?obj=' . $this->object_id ) );
+		$this->redirect( array( 'msg' => 'Objetivo gravado com sucesso.', 'dst' => '../admin/objetivo.php?obj=' . $this->object_id . '&dmn=' . $this->m_object->__get('dominio')) );
 	}
 
 

@@ -47,7 +47,53 @@ class Autenticacao{
 			$this->redirectLogin();
 		}
 
+	}
+
+	/*
+	Verifica se esusuário logado possui acesso a área administrativa (fora de dominio)
+	*/
+	public function checkAcessAdm(){
+
+		if( $this->m_session->getValue( 'perfil' ) != 'ADM' ) {
+
+			$this->m_session->setValue( 'mensagem', 'Acesso não permitido para esta página.' );
+			header("location: acessonegado.php");
+			exit();
+		}
+
 	}	
+
+	/*
+	Verifica se possui a permissão adequada, passada por argumento do método. Retorna true ou false
+	*/
+	public function hasPermission( $permissoes = '', $condicao = null ){
+
+		if( empty( $permissoes ) ) return true;
+
+		if( is_array( $permissoes ) ){
+
+			$has = true;
+			foreach ( $permissoes as $permissao ) {
+				
+				if( strpos( $this->m_session->getValue( 'permissao' ), $permissao ) !== false ){
+
+					if( $condicao == '&&' ){
+						continue;
+					}else{
+						return true;
+					}
+				}else{
+					$has = false;
+				}
+			}
+			return $has;
+			
+		}else{
+
+			return ( strpos( $this->m_session->getValue( 'permissao' ), $permissoes ) !== false )? true : false;
+
+		}
+	}
 
 
 	/*
@@ -103,7 +149,7 @@ class Autenticacao{
 	/*
 	retorna uma listagem de menus que o usuário tem permissão
 	*/
-	public function listMenu( $dominio ){
+	public function listMenu( $dominio = false ){
 		
 		$daoMenu = new DaoMenu();
 		$menus = $daoMenu->listMenu( $this->m_session->getValue('perfil'), $dominio );				
@@ -143,7 +189,11 @@ class Autenticacao{
 
 			if( empty( $perfilDominio ) ){
 
-				return false;
+				//return false;
+				$this->m_session->setValue( 'mensagem', 'Acesso não permitido para este domíno.' );
+				header("location: acessonegado.php");
+				exit();
+
 			}
 
 			$m_usuario->getPermissoes( $perfilDominio['perfil'] );

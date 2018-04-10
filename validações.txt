@@ -1,0 +1,7 @@
+Validações:
+
+$m_autenticacao->checkAcess() -> Verifica se o usuário está logado. É chamado no head.php. Caso contrário é redirecionado para a página de acesso negado.
+
+$m_autenticacao->checkAcessAdm() -> Utilizado nas páginas fora de um dominio. É chamado no headAdm.php. Verifica se possui o perfil ADM. Caso contrário é redirecionado para a página de acesso negado.
+
+$m_autenticacao->checkAcessDominio() -> Utilizado nas páginas de dominio. É chamado no headDominio.php. Verifica se o usuário possui acesso a determinado domínio. Caso contrário é redirecionado para a página de acesso negado.

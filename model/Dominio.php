@@ -185,11 +185,9 @@ class Dominio extends IObject {
 			$bts .= '<div class="col-md-12">';
 
 				$bts .= '<div class="col-md-2 col-sm-4 col-xs-12">';
-							
-					$disabled = ( !array_intersect( array( 'C', 'U' ), $m_session->getValue( 'permissoes' ) ))? ' disabled ' : '';
 
-			 		$bts .= '<a href="dominio.php"><button type="button" class="btn btn-primary btn-cor-primary btn-100" ' . $disabled . ' id="novoDominio">Novo Dominio</button></a>';
-
+					$bts .= '<a href="dominio.php"><button type="button" class="btn btn-primary btn-cor-primary btn-100" id="novoDominio">Novo Dominio</button></a>';	
+					
 			 	$bts .= '</div>';
 
 			 $bts .= '</div>';
@@ -273,7 +271,7 @@ class Dominio extends IObject {
     Imprime o formulário para criar e editar um domínio
     Param: Object Session
     */
-    /*public function showFormulario( Session $m_session ){
+    public function showFormulario( Session $m_session ){
 
     	$form = '';
 
@@ -390,7 +388,7 @@ class Dominio extends IObject {
 
 		echo $form;
 
-    }*/
+    }
 
 
 

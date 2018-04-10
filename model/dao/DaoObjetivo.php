@@ -77,7 +77,7 @@ class DaoObjetivo extends IDao {
 				}
 					
 				//apenas com as informações necessárias para listar a árvore de objetivos
-				$tree[] = array('id' => $parent['id'], 'nome' => $parent['nome'], 'tipo' => $parent['tipo'], 'ordem' => $parent['ordem'], 'leaf' => $parent['leaf'], 'parent' => $parent['parent'], 'children' => $this->getObjetivosFilhos( $childrens ) );
+				$tree[] = array('id' => $parent['id'], 'nome' => $parent['nome'], 'tipo' => $parent['tipo'], 'ordem' => $parent['ordem'], 'leaf' => $parent['leaf'], 'parent' => $parent['parent'], 'dominio' => $parent['dominio'], 'children' => $this->getObjetivosFilhos( $childrens ) );
 					
 			}
 						

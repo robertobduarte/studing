@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . "/head.php";
+include_once __DIR__ . "/headHome.php";
 
 $msg = $m_session->getValue( 'mensagem', true );
 $mensagem = ( !empty( $msg ) )? $msg : ' Você não tem acesso a este conteúdo. Verifique se parâmetros estão incorretos.';
