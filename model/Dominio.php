@@ -10,7 +10,6 @@ class Dominio extends IObject {
 	private $nome;
 	private $alias;
 	private $descricao;
-	private $imagem;
 	private $diretorio;
 	private $objetivoTipos = array();
 	private $mensagem;
@@ -36,7 +35,6 @@ class Dominio extends IObject {
 									'id' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
 									'nome' => array( 'type' => false, 'mandatory' => true, 'size' => 200 ),
 									'alias' => array( 'type' => false, 'mandatory' => false, 'size' => 50 ),
-									'imagem' => array( 'type' => false, 'mandatory' => false, 'size' => 50 ),
 									'diretorio' => array( 'type' => false, 'mandatory' => true, 'size' => 50 ),
 									'diretorio' => array( 'type' => false, 'mandatory' => false, 'size' => false )
 									);
@@ -268,6 +266,24 @@ class Dominio extends IObject {
 
 
     /*
+    Imprime o logo do domínio, caso exista
+    */
+    public function showLogo(){
+
+    	if( file_exists( "../dominio/" . $this->__get('diretorio') . "/logo.png" ) ) {
+
+			$logo .= '<div class="row">';
+	    		$logo .= '<div class="col-md-3 col-sm-5 col-xs-10">';
+					$logo .= '<img src="../dominio/' . $this->__get('diretorio') . '/logo.png" class="img-responsive banner">';
+				$logo .= '</div>';
+			$logo .= '</div>';
+		}
+
+		echo $logo;
+    }
+
+
+    /*
     Imprime o formulário para criar e editar um domínio
     Param: Object Session
     */
@@ -275,11 +291,20 @@ class Dominio extends IObject {
 
     	$form = '';
 
+    	if( file_exists( "../dominio/" . $this->__get('diretorio') . "/logo.png" ) ) {
+
+    		$form .= '<div class="row">';
+	    		$form .= '<div class="col-md-3 col-sm-5 col-xs-10">';
+					$form .= '<img src="../dominio/' . $this->__get('diretorio') . '/logo.png" class="img-responsive banner">';
+				$form .= '</div>';
+			$form .= '</div>';
+
+			$form .= '<div class="col-md-12 divesp"></div>';
+		}
+
     	$form .= '<form id="dominio_' . $this->__get('id') . '" action="' . $this->__get('controller') . '" enctype="multipart/form-data" method="POST">';
 
 			$form .= '<input type="hidden" name="id" value="' . $this->__get('id') . '">';
-			$form .= '<input type="hidden" name="arquivo" value="' . $this->__get('imagem') . '">';
-			$form .= '<input type="hidden" name="imagem" value="' . $this->__get('imagem') . '">';
 			$form .= '<input type="hidden" name="action" value="salvar">';
 
 			$form .= '<div class="row">';
@@ -331,7 +356,7 @@ class Dominio extends IObject {
 					$form .= '<div class="col-md-12" id="arquivoDominio">';
 						$form .= '<ul class="list-unstyled listFiles" id="listFile">';
 									
-							$form .= ( !empty( $this->__get('imagem') ) )? '<li class="iconeLink" data-toggle="modal" data-target="#modalDominio">' . $this->__get('imagem') . ' <i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i></li>' : ''; 
+							$form .= ( file_exists( "../dominio/" . $this->__get('diretorio') . "/logo.png" ) )? '<li class="iconeLink" data-toggle="modal" data-target="#modalDominio">Logo<i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i></li>' : "dominio/" . $this->__get('diretorio') . "/logo.png"; 
 								
 						$form .= '</ul>';
 					$form .= '</div>';
@@ -358,8 +383,7 @@ class Dominio extends IObject {
 
 		$form .= '</form>';
 
-
-		if( !empty( $this->__get('imagem') ) ){
+		if( file_exists( "../dominio/" . $this->__get('diretorio') . "/logo.png" ) ) {
 
 			$form .= '<div class="modal fade" id="modalDominio" tabindex="-1" role="dialog" aria-labelledby="modalDominio">';
 
@@ -372,7 +396,7 @@ class Dominio extends IObject {
 							$form .= '<h4 class="modal-title">Imagem</h4>';
 						$form .= '</div>';
 						$form .= '<div class="modal-body">';
-							$form .= '<img src="../dominio/' . $this->__get('diretorio') . '/' . $this->__get('imagem') . '" class="img-responsive banner">';
+							$form .= '<img src="../dominio/' . $this->__get('diretorio') . '/logo.png" class="img-responsive banner">';
 						$form .= '</div>';
 													
 						$form .= '<div class="modal-footer">';
@@ -387,75 +411,7 @@ class Dominio extends IObject {
 		}
 
 		echo $form;
-
     }
-
-
-
-    /*public function showModelosObjeto( Session $m_session ){
-
-
-	    	$this->getModelosObjeto();
-	    	$this->getListBanners();
-	    	$this->getPesquisas();
-
-	    	$table = '';	
-
-	    	$table .= '<div class="col-md-12">';
-	    		$table .= '<h3>Modelos de Objeto</h3>';
-	    	$table .= '</div>';
-
-	    	
-	    	$disabled = ( !array_intersect( array( 'C', 'U', 'R' ), $m_session->getValue( 'permissoes' ) ) )? ' disabled ' : '';
-
-	    	$table .= '<div class="col-md-3 col-md-offset-9 col-sm-5 col-sm-offset-7 col-xs-12">';
-	    		$table .= '<a href="modelo.php?dmn='. $this->__get('id') . '">';
-	    		$table .= '<button type="button" class="btn btn-100 btn-primary btn-cor-primary" role="button" ' . $disabled . ' id="novoModelo_' . $this->__get('id') . '">Novo Modelo</button>';
-	    		$table .= '</a>';
-	    	$table .= '</div>';
-
-	    	$table .= '<div class="col-md-12 divesp"></div>';
-	    		
-	    	$table .= '<table class="table table-striped" id="listModelo_' . $this->__get('id') . '">';
-
-		    	$table .= '<thead>';
-		    		$table .= '<th style="width: 60%;">Modelo</th>';
-		    		$table .= '<th style="width: 12%;">Questões</th>';
-		    		$table .= '<th style="width: 10%;">Média</th>';
-		    		$table .= '<th style="width: 6%;">Tentativas</th>';
-		    		$table .= '<th style="width: 7%;">Peso</th>'; 		
-		    	$table .= '</thead>';
-
-		    	$table .= '<tbody>';
-
-		    	if( !empty( $this->modelosObjeto ) ){
-
-		    		foreach ( $this->modelosObjeto as $modelo ) {  
-
-		    			$table .= '<tr id="tr_' . $modelo->__get('id') . '">';
-		    				$table .= '<td><a href="modelo.php?mdl=' . $modelo->__get('id') . '" class="" >' . $modelo->__get('nome') . '</a></td>';
-		    				$table .= '<td>' . $modelo->__get('num_questoes') . '</td>';
-				    		$table .= '<td>' . $modelo->__get('media') . '</td>';
-				    		$table .= '<td>' . $modelo->__get('tentativas') . '</td>';			    		
-				    		$table .= '<td>' . $modelo->__get('peso') . '</td>';			    		
-				    	$table .= '</tr>';
-
-		    		}
-
-	    		}else{
-
-	    			$table .= '<tr>';
-		    			$table .= '<td colspan="5"><div class="col-md-12 alert alert-warning"><p>Não existem modelos cadastrados.</p></td></div>';
-					$table .= '</tr>';
-	    	}
-
-	    		$table .= '</tbody>';
-	    	$table .= '</table>';	    	
-
-	    	echo $table; 
-
-    }*/
-
 
 
 }

@@ -40,8 +40,8 @@ $m_dominio = new Dominio( array('id' => $dominio_id ) );
 				<div class="col-md-12 divesp"></div>
 
 				<section class="col-md-12" id="dominio">
-
-					<?php $m_dominio->showFormulario( $m_session ); ?>
+				
+					<?php $m_dominio->showFormulario( $m_session ); ?>					
 
 					<div class="col-md-12" id="mensagem"></div>
 

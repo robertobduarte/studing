@@ -5,8 +5,8 @@ $m_session = new Session();
 
 $m_autenticacao = new Autenticacao();
 //$m_autenticacao->setUser( 'sofiarduarte' );
-//$m_autenticacao->setUser( 'robertobduarte' );
-$m_autenticacao->setUser( 'azambuja' );
+$m_autenticacao->setUser( 'robertobduarte' );
+//$m_autenticacao->setUser( 'azambuja' );
 //$m_autenticacao->setUser( 'gensa' );
 //debug($_SESSION);
 //exit();

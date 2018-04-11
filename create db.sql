@@ -83,7 +83,6 @@ CREATE TABLE dominio (
   nome varchar(200) NOT NULL,
   alias varchar(50),
   descricao text,
-  imagem varchar(50),
   css varchar(50),
   diretorio varchar(50),
   mensagem text

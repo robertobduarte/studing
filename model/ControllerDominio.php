@@ -3,7 +3,7 @@ include_once __DIR__ . "/../config.php";
 
 class ControllerDominio extends Icontroller {
 
-	protected $name_session = 'form_certificado';
+	protected $name_session = 'form_dominio';
 	
 	function __construct(){
 
@@ -56,9 +56,9 @@ class ControllerDominio extends Icontroller {
 
 	protected function salvar(){
 
-		$this->m_object->__set( 'Dominio', $this->dados );	
+		$this->m_object->__set( 'Dominio', $this->dados );
 
-		if( empty( $this->dados['arquivo'] ) ){
+		if( !empty( $_FILES['file']['name'] ) ){ //arquivo enviado
 
 			$dadosUpload = array( 
 							'diretorio' => $this->m_object->__get('diretorio'),
