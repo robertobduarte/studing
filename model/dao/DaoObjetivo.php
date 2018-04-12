@@ -271,7 +271,7 @@ class DaoObjetivo extends IDao {
 
 			$query->execute();
 
-            $lastId = $this->conex->lastInsertId('objetivo_id_seq');         
+            $lastId = $this->conex->lastInsertId();         
             $this->conex->commit();
 
             return $lastId;

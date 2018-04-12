@@ -226,8 +226,8 @@ class DaoDominio extends IDao{
 
 		try{
 
-			$sql = "INSERT INTO dominio ( nome, alias, descricao, imagem, diretorio, css, num_questoes, media, prazo, msg_inicial ) 
-					VALUES ( :nome, :alias, :descricao, :imagem, :diretorio, :css, :num_questoes, :media, :prazo, :msg_inicial)";
+			$sql = "INSERT INTO dominio ( nome, alias, descricao, diretorio, css, mensagem ) 
+					VALUES ( :nome, :alias, :descricao, :diretorio, :css, :mensagem )";
 
 			$this->conex->beginTransaction();
 
@@ -235,17 +235,13 @@ class DaoDominio extends IDao{
 			$query->bindParam( ':nome', $m_dominio->__get('nome') );
 			$query->bindParam( ':alias', $m_dominio->__get('alias') );
 			$query->bindParam( ':descricao', $m_dominio->__get('descricao') );
-			$query->bindParam( ':imagem', $m_dominio->__get('imagem') );
 			$query->bindParam( ':diretorio', $m_dominio->__get('diretorio') );
 			$query->bindParam( ':css', $m_dominio->__get('css') );
-			$query->bindParam( ':num_questoes', $m_dominio->__get('num_questoes') );
-			$query->bindParam( ':media', $m_dominio->__get('media') );
-			$query->bindParam( ':prazo', $m_dominio->__get('prazo') );
-			$query->bindParam( ':msg_inicial', $m_dominio->__get('msg_inicial') );
+			$query->bindParam( ':mensagem', $m_dominio->__get('mensagem') );
 
 			$query->execute();
 
-            $lastId = $this->conex->lastInsertId('dominio_id_seq');         
+            $lastId = $this->conex->lastInsertId();         
             $this->conex->commit();
 
             return $lastId;

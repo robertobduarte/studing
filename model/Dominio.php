@@ -11,6 +11,7 @@ class Dominio extends IObject {
 	private $alias;
 	private $descricao;
 	private $diretorio;
+	private $css;
 	private $objetivoTipos = array();
 	private $mensagem;
 	private $objetivos = array(); //list de objetivos pai do domínio
@@ -35,8 +36,7 @@ class Dominio extends IObject {
 									'id' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
 									'nome' => array( 'type' => false, 'mandatory' => true, 'size' => 200 ),
 									'alias' => array( 'type' => false, 'mandatory' => false, 'size' => 50 ),
-									'diretorio' => array( 'type' => false, 'mandatory' => true, 'size' => 50 ),
-									'diretorio' => array( 'type' => false, 'mandatory' => false, 'size' => false )
+									'diretorio' => array( 'type' => false, 'mandatory' => true, 'size' => 50 )
 									);
 
 	}
@@ -356,16 +356,18 @@ class Dominio extends IObject {
 					$form .= '<div class="col-md-12" id="arquivoDominio">';
 						$form .= '<ul class="list-unstyled listFiles" id="listFile">';
 									
-							$form .= ( file_exists( "../dominio/" . $this->__get('diretorio') . "/logo.png" ) )? '<li class="iconeLink" data-toggle="modal" data-target="#modalDominio">Logo<i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i></li>' : "dominio/" . $this->__get('diretorio') . "/logo.png"; 
+							$form .= ( file_exists( "../dominio/" . $this->__get('diretorio') . "/logo.png" ) )? '<li class="iconeLink" data-toggle="modal" data-target="#modalDominio">Logo<i class="fa fa-file-image-o fa-lg" aria-hidden="true"></i></li>' : ''; 
 								
 						$form .= '</ul>';
 					$form .= '</div>';
 
 				$form .= '</div>';
 
+			$m_autenticacao = new Autenticacao();
+
 			$form .= '<div class="col-md-3 col-sm-6 col-xs-12">';
 						
-				$disabled = ( !array_intersect( array( 'C', 'U' ), $m_session->getValue( 'permissoes' ) ) )? ' disabled ' : '';
+				$disabled = ( !$m_autenticacao->hasPermission( array( 'C', 'U' ) ) )? ' disabled ' : '';
 
 	 			$form .= '<button type="button" class="btn btn-primary btn-cor-primary btn-100" ' . $disabled . ' id="salvarDominio_' . $this->__get('id') . '">Salvar</button>';
 	 		$form .= '</div>';
@@ -374,7 +376,7 @@ class Dominio extends IObject {
 
 				$form .= '<div class="col-md-3 col-sm-6 col-xs-12">';
 
-					$disabled = ( !array_intersect( array( 'X' ), $m_session->getValue( 'permissoes' ) ))? ' disabled ' : '';
+					$disabled = ( !$m_autenticacao->hasPermission( array( 'D' ) ) )? ' disabled ' : '';
 
 					$form .= '<button type="button" class="btn btn-danger btn-100" ' . $disabled . ' id="excluirDominio_' . $this->__get('id') . '">Excluir domínio</button>';
 				$form .= '</div>';

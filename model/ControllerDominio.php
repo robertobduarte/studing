@@ -15,7 +15,7 @@ class ControllerDominio extends Icontroller {
 	protected function definePropriedades(){
 
 		$this->m_object = new Dominio();
-		$this->destinoDefault = '../view/listDominio.php';
+		$this->destinoDefault = '../admin/listDominio.php';
 		$this->mensagemDefault = 'Erro! Não foi possível completar a ação.';
 	}
 
@@ -58,27 +58,6 @@ class ControllerDominio extends Icontroller {
 
 		$this->m_object->__set( 'Dominio', $this->dados );
 
-		if( !empty( $_FILES['file']['name'] ) ){ //arquivo enviado
-
-			$dadosUpload = array( 
-							'diretorio' => $this->m_object->__get('diretorio'),
-							'caminho_relativo' => 'dominio'
-							);
-
-			$UploadBanner = new UploadBanner( $dadosUpload );
-			$retorno = $UploadBanner->getInformacoesArquivo();
-
-			if( $retorno['retorno']['cod'] ){
-
-				$this->m_object->__set( 'Dominio', array( 'imagem' => $retorno['nome_arquivo'] ) );
-
-			}else{
-
-				$this->redirect( array( 'msg' => 'Erro ao gravar arquivo: <br>' . $retorno['retorno']['msg'] ) );
-			}
-					
-		}
-
 		if( empty( $this->m_object->__get('id') ) ){
 
 			$this->object_id = $this->m_object->novo();
@@ -86,6 +65,11 @@ class ControllerDominio extends Icontroller {
 			if( !$this->object_id ){
 
 				$this->redirect( array( 'msg' => 'Erro ao gravar domínio.' ) );
+			}
+
+			//se sucesso, cria o diretório
+			if( !mkdir( '.../' . APP . 'dominio/' . $this->m_object->__get('diretorio'), 0744 )){
+				$this->redirect( array( 'msg' => 'Erro ao tentar criar o diretório em: .../' . APP . 'dominio/' . $this->m_object->__get('diretorio'), 'dst' => '../admin/dominio.php?dmn=' . $this->object_id ) );
 			}
 
 		}else{
@@ -96,13 +80,30 @@ class ControllerDominio extends Icontroller {
 
 			if( !$retorno ){
 
-				$this->redirect( array( 'msg' => 'Erro ao gravar domínio.', 'dst' => '../view/dominio.php?dmn=' . $this->m_object->__get('id') ) );		
+				$this->redirect( array( 'msg' => 'Erro ao gravar domínio.', 'dst' => '../admin/dominio.php?dmn=' . $this->object_id ) );		
 			}
+		}
+
+		if( !empty( $_FILES['file']['name'] ) ){ //arquivo enviado
+
+			$dadosUpload = array( 
+							'diretorio' => $this->m_object->__get('diretorio'),
+							'caminho_relativo' => 'dominio'
+							);
+
+			$UploadBanner = new UploadLogoDominio( $dadosUpload );
+			$retorno = $UploadBanner->getInformacoesArquivo();
+
+			if( !$retorno['retorno']['cod'] ){
+
+				$this->redirect( array( 'msg' => 'Erro ao gravar arquivo: <br>' . $retorno['retorno']['msg'] , 'dst' => '../admin/dominio.php?dmn=' . $this->object_id ) );	
+			}
+					
 		}
 
 		$this->m_object->__set('Dominio', array( 'id' => $this->object_id ) );
 
-		$this->redirect( array( 'msg' => 'Domínio gravado com sucesso.', 'dst' => '../view/dominio.php?dmn=' . $this->object_id ) );
+		$this->redirect( array( 'msg' => 'Domínio gravado com sucesso.', 'dst' => '../admin/dominio.php?dmn=' . $this->object_id ) );
 	}
 
 
