@@ -1,6 +1,5 @@
 <?php
-include_once __DIR__ . "/../config.php";
-include $_SERVER['DOCUMENT_ROOT'] . '/' . APP . "view/head.php";
+include_once __DIR__ . "/headHome.php";
 
 $msg = $m_session->getValue( 'mensagem', true );
 $mensagem = ( !empty( $msg ) )? $msg : ' Você não tem acesso a este conteúdo. Verifique se parâmetros estão incorretos.';
@@ -22,4 +21,4 @@ $mensagem = ( !empty( $msg ) )? $msg : ' Você não tem acesso a este conteúdo.
 
 </div> <!-- .panel_main_page -->
 		
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/' . APP . "view/footer.php"; ?>
+<?php include CAMINHO_ABSOLUTO . "admin/footer.php"; ?>

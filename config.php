@@ -1,13 +1,11 @@
 <?php
-define('APP', "studing/");
+include_once __DIR__ . '/environment.php';
+
 header("Content-type: UTF-8");
 
 date_default_timezone_set('America/Sao_Paulo');
 
 error_reporting( E_ALL );
-
-//local do arquivo de log
-//ini_set( 'error_log', 'error/log_de_erros.log' );
 
 ini_set( 'ignore_repeated_source', true );    
 ini_set( 'ignore_repeated_errors', true );
@@ -15,18 +13,13 @@ ini_set('display_errors', false);
 ini_set( 'log_errors', true );
 
 //classe e função callback chamada sempre que houver um erro
-require_once $_SERVER['DOCUMENT_ROOT'] . '/' . APP . "model/ErrorControl.php";
+require_once CAMINHO_ABSOLUTO . "model/ErrorControl.php";
 set_error_handler(array('ErrorControl','errorAction'));
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/' . APP . "autoload.php";
+require_once CAMINHO_ABSOLUTO . "autoload.php";
 
 
-//VARIÁVEIS DE AMBIENTE environment.txt
-
-$file = $_SERVER['DOCUMENT_ROOT'] . '/' . APP . "environment.txt";
-$env = file_get_contents($file);
-
-if( trim($env) == 'desenvolvimento'){
+if( $ambiente == 'desenvolvimento'){
 	
 	//BANCO DE DADOS***********
 	define('DB', "mysql");
@@ -37,7 +30,7 @@ if( trim($env) == 'desenvolvimento'){
 	define('DB_PORT', "3306");
 	
 
-}else if( trim($env) == 'producao'){
+}else if( $ambiente == 'producao'){
 			
 	//BANCO DE DADOS***********
 	define('DB', "mysql");

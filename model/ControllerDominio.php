@@ -68,8 +68,8 @@ class ControllerDominio extends Icontroller {
 			}
 
 			//se sucesso, cria o diretório
-			if( !mkdir( '.../' . APP . 'dominio/' . $this->m_object->__get('diretorio'), 0744 )){
-				$this->redirect( array( 'msg' => 'Erro ao tentar criar o diretório em: .../' . APP . 'dominio/' . $this->m_object->__get('diretorio'), 'dst' => '../admin/dominio.php?dmn=' . $this->object_id ) );
+			if( !mkdir( CAMINHO_ABSOLUTO . '/dominio/' . $this->m_object->__get('diretorio'), 0744 )){
+				$this->redirect( array( 'msg' => 'Erro ao tentar criar o diretório em: ' . CAMINHO_ABSOLUTO . '/dominio/' . $this->m_object->__get('diretorio'), 'dst' => '../admin/dominio.php?dmn=' . $this->object_id ) );
 			}
 
 		}else{

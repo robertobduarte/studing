@@ -21,4 +21,4 @@ $mensagem = ( !empty( $msg ) )? $msg : ' Você não tem acesso a este conteúdo.
 
 </div> <!-- .panel_main_page -->
 		
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/' . APP . "view/footer.php"; ?>
+<?php include CAMINHO_ABSOLUTO . "admin/footer.php"; ?>

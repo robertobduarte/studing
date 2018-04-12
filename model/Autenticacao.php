@@ -133,7 +133,7 @@ class Autenticacao{
 
 			}
 
-			$destino = ( !empty( $param['destino'] ) )? $param['destino'] : $_SERVER['DOCUMENT_ROOT'] . '/' . APP;
+			$destino = ( !empty( $param['destino'] ) )? $param['destino'] : CAMINHO_ABSOLUTO;
 
 			header( 'location: ' . $destino );
 			exit();
