@@ -19,29 +19,6 @@ set_error_handler(array('ErrorControl','errorAction'));
 require_once CAMINHO_ABSOLUTO . "autoload.php";
 
 
-if( $ambiente == 'desenvolvimento'){
-	
-	//BANCO DE DADOS***********
-	define('DB', "mysql");
-	define('DB_NAME', "studing");
-	define('DB_HOST', "localhost");
-	define('DB_USER', "root");
-	define('DB_PASS', "");
-	define('DB_PORT', "3306");
-	
-
-}else if( $ambiente == 'producao'){
-			
-	//BANCO DE DADOS***********
-	define('DB', "mysql");
-	define('DB_NAME', "comidinhaspara");
-	define('DB_HOST', "mysql.comidinhasparaceliaco.com.br");
-	define('DB_USER', "comidinhaspara");
-	define('DB_PASS', "M3rd41980");
-	define('DB_PORT', "3306");
-
-}
-
 function debug( $variavel ){
 
 	echo '<br>';
