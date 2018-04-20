@@ -2,7 +2,14 @@
 include_once __DIR__ . "/headHome.php";
 
 $m_dominio = new Dominio();
-$dominios = $m_dominio->getDominiosUsuario();
+$dominios = $m_dominio->getDominios();
+
+/*$m_usuario = new Usuario();
+$usuarios = $m_usuario->getUsuarios();
+echo '<br><br><br><br><br><br><br><br><br><br><br><pre>';
+print_r($usuarios);
+echo '</pre>';
+exit('morri');*/
 
 if( empty( $dominios ) ){
 

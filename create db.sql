@@ -96,6 +96,20 @@ CREATE TABLE dominio_usuario (
   PRIMARY KEY (usuario, dominio)
 );
 
+
+create table disciplina (
+id int not null primary key auto_increment,
+nome varchar(200) not null,
+dominio int not null,
+descricao text default null
+)
+
+create table competencia (
+id int not null primary key auto_increment,
+nome varchar(50) not null,
+disciplina int not null
+)
+
 #insert pessoa
 insert into pessoa (nome, email) values
 ('Professor Azambuja', 'azambuja@professor.com'), 

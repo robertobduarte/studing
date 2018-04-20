@@ -24,11 +24,11 @@ echo "</pre>";*/
 
 		<div class="col-md-12 corpoPage">
 			
-			<?php $m_dominio->buttonNovoDominio( $m_session ); ?>
+			<?php $m_dominio->buttonNovoDominio(); ?>
 
 			<div class="col-md-12">
 			
-				<?php $m_dominio->listDominios( $m_session ); ?>
+				<?php $m_dominio->listDominios(); ?>
 
 			</div>
 		</div>

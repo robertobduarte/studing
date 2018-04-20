@@ -1,9 +1,33 @@
-Dominio - CRUP
-Tipo de objetivos - CRUD - vinculo por dominio
-Disciplinas - CRUD e vindulação ao objetivo
-Usuários - CRUD - usuário prof e std - vinculo a dominios e objetivos
-Pessoas - CRUD
-Questões
+
+
+PAINEL ADMINISTRATIVO - SISTEMA
+
+Dominio - CRUD - ******** ok
+Usuários - CRUD - usuário com perfil DMND (administrados de domínio)
+Usuário - CRUD - perfil estudante - vinculo a domínio(s)
+
+
+
+
+
+PAINEL ADMINISTRATIVO - DOMÍNIO
+
+Tipo de objetivos - CRUD
+Disciplinas - CRUD
+Temas CRUD (Ex: adição, raiz quadrada, substantivo, adjetivo)
+SaibaMais CRUD (cadastro de links que sugerem onde obter conhecimento sobre o tema)
+Questões - CRUD
+
+
+
+
+Questão:
+id;
+Texto;
+Tipo: (slide ou objetiva)
+Temas (tabela n*n => questao_tema)
+Comentario
+SaibaMais (tabela n*n => questao_saibamais)
 
 
 

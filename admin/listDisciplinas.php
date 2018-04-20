@@ -1,14 +1,17 @@
 <?php
 include_once __DIR__ . "/headDominio.php"; //página instancia um dominio - $m_dominio
 
-$m_session->setValue( 'menu', '1' );
+$m_session->setValue( 'menu', '2' );
 
-$m_objetivo = new Objetivo();
-$m_objetivo->__set( 'Objetivo', array( 'dominio' => $m_dominio->__get('id') ) );
-$m_objetivo->listar($m_dominio->__get('id'), true);
+$m_disciplina = new Disciplina();
+$m_disciplina->__set( 'Disciplina', array( 'dominio' => $m_dominio->__get('id') ) );
+$m_disciplina->listar( $m_dominio->__get('id') );
 
+$dadosForm = array( 'method' => 'ajaxRequest' );
+$m_session->setValue('form_disciplina', $dadosForm );
 ?>
 
+<script src="js/disciplina.js?v=<?= filemtime('js/disciplina.js'); ?>"></script>
 
 <div class="row panel_main_page">
 
@@ -22,14 +25,14 @@ $m_objetivo->listar($m_dominio->__get('id'), true);
 		<?php $m_session->showRetorno(); ?>
 
 		<div class="col-md-12 tituloPage">
-			<h3>OBJETIVOS DE APRENDIZAGEM</h3>
+			<h3>DISCIPLINAS</h3>
 		</div>
 
 		<div class="col-md-12 corpoPage">
 			
 			<div class="row">
 
-			<?php $m_objetivo->buttonNovoObjetivo(); ?>
+			<?php $m_disciplina->buttonNovaDisciplina(); ?>
 
 			</div>
 
@@ -39,8 +42,7 @@ $m_objetivo->listar($m_dominio->__get('id'), true);
 			
 			<div class="row">
 			
-				<?php $m_objetivo->listObjetivos(); ?>
-				<?php //echo '<pre>'; print_r( $m_objetivo->listObjetivos()); echo '</pre>'; ?>
+				<?php $m_disciplina->listDisciplinas(); ?>
 
 			</div>
 		</div>

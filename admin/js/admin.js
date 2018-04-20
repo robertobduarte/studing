@@ -116,6 +116,6 @@ function getSizeView(){
 function enableInputs( formId ){
 
 	$("form#"+formId+" :input").each(function(){	
-				$(this).attr('disabled', false );		
+		$(this).attr('disabled', false );		
 	});
 }

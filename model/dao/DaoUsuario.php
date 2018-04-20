@@ -107,17 +107,10 @@ class DaoUsuario extends IDao{
 			$query = $this->conex->prepare( $sql );
 			$query->bindParam( ':perfil', $perfil );
 
-            $query->execute(); 
-            
-			//$permissoes = array();
+            $query->execute();
 
 			$permissao = $query->fetch(PDO::FETCH_ASSOC);
-			/*while( $permissao = $query->fetch(PDO::FETCH_ASSOC) ){
 
-				$permissoes[] = $permissao;
-			}
-
-			return $permissoes;*/
 			return $permissao['permissao'];
 
         } catch (Exception $e) {
@@ -132,8 +125,6 @@ class DaoUsuario extends IDao{
 
 		try {
 
-            //$sql = "SELECT perfil FROM dominio_usuario WHERE usuario = :usuario_id AND dominio = :dominio_id";
-           
             $sql = "SELECT d.perfil, p.nome FROM dominio_usuario d
 					INNER JOIN perfil p ON (p.perfil = d.perfil)
 					WHERE usuario = :usuario_id AND dominio = :dominio_id";
@@ -153,6 +144,8 @@ class DaoUsuario extends IDao{
         }
 
 	}
+
+
 
 }
 ?>

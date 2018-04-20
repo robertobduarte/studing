@@ -15,6 +15,7 @@ class Dominio extends IObject {
 	private $objetivoTipos = array();
 	private $mensagem;
 	private $objetivos = array(); //list de objetivos pai do domínio
+	private $usuarios = array(); //list de usuários - usado para guardar os usuário vinculados a um dominio
 
 
 
@@ -41,7 +42,7 @@ class Dominio extends IObject {
 
 	}
 
-	public function getDominiosUsuario(){
+	public function getDominios(){ //retorna os domínios que o usuário logado é vinculado. Se ADM, retorna todos os domínios
 
 		$daoDominio = new DaoDominio();
 
@@ -63,8 +64,6 @@ class Dominio extends IObject {
 
 		}
 
-		
-
 		if( !empty( $dados ) ){
 
 			foreach ( $dados as $value ) {
@@ -76,8 +75,9 @@ class Dominio extends IObject {
 		}
 
 		return Dominio::$instances;
-		//return $dados;
 	}
+
+
 
 	public function getDominio( $dominio_id ){
 
@@ -175,7 +175,7 @@ class Dominio extends IObject {
     }*/
 
 
-    public function buttonNovoDominio( Session $m_session ){
+    public function buttonNovoDominio(){
 
     	$bts = '';
     	$bts .= '<div class="row">';
@@ -195,9 +195,9 @@ class Dominio extends IObject {
 		echo $bts;
     }
 
-    public function listDominios( Session $m_session ){
+    public function listDominios(){
 
-    	$this->getDominiosUsuario();
+    	$this->getDominios();
 
     	if( !empty( $this::$instances ) ){
 
@@ -231,6 +231,49 @@ class Dominio extends IObject {
     	}
 
     }
+
+
+
+    public function listUsuariosAdmd(){
+
+    	$this->getDominios();
+
+    	if( !empty( $this::$instances ) ){
+
+    		//método para retornar os usuários pertencentes a um domínio //param perfil (ADMD ou STD)
+    		//$this->getUsuariosDominio( 'ADMD' );
+
+    		/*echo '<table class="table table-striped" id="">';
+
+	    		echo '<thead>';
+	    			echo '<th>Id</th>';
+	    			echo '<th>Nome</th>';
+	    			echo '<th>Descricao</th>';
+	    		echo '</thead>';
+
+	    		echo '<tbody>';
+
+	    			foreach ( $this::$instances as $dominio ) {
+	    			
+		    			echo '<tr id="tr_' . $dominio->__get('id'). '">';
+		    				echo '<td>' . $dominio->__get('id') . '</td>';
+		    				echo '<td><a href="dominio.php?dmn=' . $dominio->__get('id') . '" class="" >' . $dominio->__get('nome') . '</a></td>';
+		    				echo '<td>' . $dominio->__get('descricao') . '</td>';		    				
+		    			echo '</tr>';
+
+	    			}
+
+	    		echo '</tbody>';
+
+    		echo '</table>';*/
+
+    	}else{
+
+    		echo '<div class="col-md-12 alert alert-warning"><p>Não existem usuários ADMD vinculados a este domínio.</p></div>';
+    	}
+
+    }
+
 
 
     public function novo(){

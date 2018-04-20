@@ -131,7 +131,6 @@ abstract class Icontroller {
 
         $errors = array();
 
-        //if( $this->method != 'ajaxRequest' ){
         if( $this->dados['method'] != 'ajaxRequest' ){
 
             if ( !empty( $this->m_object->__get('tiposDeDados') ) ){

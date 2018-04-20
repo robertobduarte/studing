@@ -99,66 +99,6 @@ class DaoDominio extends IDao{
 
 	}
 
-	/*
-	Lista todos os modelos de objetos de um determinado dominio
-	*/
-	/*public function getModelosByDominio( $dominio ){
-
-		try {
-
-            $sql = "SELECT * FROM modelo_objeto WHERE dominio = :dominio";
-			
-			$query = $this->conex->prepare( $sql ); 
-			$query->bindParam( ':dominio', $dominio ); 
-
-            $query->execute(); 
-            
-            $modelosObjeto = array();
-
-            while( $modelo = $query->fetch( PDO::FETCH_ASSOC ) ){
-
-            	$modelosObjeto[] = $modelo;
-            }
-			
-			return $modelosObjeto;
-
-        } catch (Exception $e) {
-
-            $this->conex->rollback();
-            echo $e->getTraceAsString();
-        }
-
-	}*/
-
-
-
-	/*
-	Retorna um modelo de objeto
-	*/
-	/*public function getModeloObjeto( $modeloObjeto_id ){
-
-		try {
-
-            $sql = "SELECT * FROM modelo_objeto as mo
-            		WHERE mo.id = :modeloObjeto_id";
-			
-			$query = $this->conex->prepare( $sql ); 
-			$query->bindParam( ':modeloObjeto_id', $modeloObjeto_id ); 
-
-            $query->execute(); 
-            
-            $modeloObjeto = $query->fetch( PDO::FETCH_ASSOC );
-			
-			return $modeloObjeto;
-
-        } catch (Exception $e) {
-
-            $this->conex->rollback();
-            echo $e->getTraceAsString();
-        }
-
-	}*/
-
 
 	/*
 	Lista todos os domínios que o usuário possui acesso
@@ -193,6 +133,7 @@ class DaoDominio extends IDao{
         }
 
 	}
+
 
 	/*
 	busca os dados do domínio, tendo como parâmetro o id do domínio
@@ -258,7 +199,7 @@ class DaoDominio extends IDao{
 		try{
 
 			$sql = "UPDATE dominio SET 
-					nome = :nome, alias = :alias, descricao = :descricao, imagem = :imagem, num_questoes = :num_questoes, media= :media, prazo = :prazo, msg_inicial = :msg_inicial
+					nome = :nome, alias = :alias, descricao = :descricao, mensagem = :mensagem
 					WHERE id = :id";
 
 			$this->conex->beginTransaction();
@@ -266,11 +207,7 @@ class DaoDominio extends IDao{
 			$query->bindParam( ':nome', $m_dominio->__get('nome') );
 			$query->bindParam( ':alias', $m_dominio->__get('alias') );
 			$query->bindParam( ':descricao', $m_dominio->__get('descricao') );
-			$query->bindParam( ':imagem', $m_dominio->__get('imagem') );
-			$query->bindParam( ':num_questoes', $m_dominio->__get('num_questoes') );
-			$query->bindParam( ':media', $m_dominio->__get('media') );
-			$query->bindParam( ':prazo', $m_dominio->__get('prazo') );
-			$query->bindParam( ':msg_inicial', $m_dominio->__get('msg_inicial') );
+			$query->bindParam( ':mensagem', $m_dominio->__get('mensagem') );
 			$query->bindParam( ':id', $m_dominio->__get('id') );
 
 			$query->execute();

@@ -22,6 +22,9 @@ class ControllerDominio extends Icontroller {
 
 	protected function startAction(){
 
+		//verifica se usuário possui acesso a área de admn, fora de domínio
+		$this->m_autenticacao->checkAcessAdm();
+
 		switch ( $this->action ) {
 
 			case 'salvar':
@@ -58,7 +61,7 @@ class ControllerDominio extends Icontroller {
 
 		$this->m_object->__set( 'Dominio', $this->dados );
 
-		if( empty( $this->m_object->__get('id') ) ){
+		if( empty( $this->m_object->__get('id') ) ){ //novo domínio - cria o diretório
 
 			$this->object_id = $this->m_object->novo();
 				
@@ -68,11 +71,12 @@ class ControllerDominio extends Icontroller {
 			}
 
 			//se sucesso, cria o diretório
-			if( !mkdir( CAMINHO_ABSOLUTO . '/dominio/' . $this->m_object->__get('diretorio'), 0744 )){
-				$this->redirect( array( 'msg' => 'Erro ao tentar criar o diretório em: ' . CAMINHO_ABSOLUTO . '/dominio/' . $this->m_object->__get('diretorio'), 'dst' => '../admin/dominio.php?dmn=' . $this->object_id ) );
+			if( !mkdir( CAMINHO_ABSOLUTO . 'dominio/' . $this->m_object->__get('diretorio'), 0744 )){
+				
+				$this->redirect( array( 'msg' => 'Erro ao tentar criar o diretório em: ' . CAMINHO_ABSOLUTO . 'dominio/' . $this->m_object->__get('diretorio'), 'dst' => '../admin/dominio.php?dmn=' . $this->object_id ) );
 			}
 
-		}else{
+		}else{ //edição de um domínio
 
 			$this->object_id = $this->m_object->__get('id');
 
@@ -118,7 +122,7 @@ class ControllerDominio extends Icontroller {
 				
 			if( !$retorno ){
 
-				$this->redirect( array( 'msg' => 'Erro ao remover domínio.', 'dst' => '../view/dominio.php?dmn=' . $this->m_object->__get('id') ) );
+				$this->redirect( array( 'msg' => 'Erro ao remover domínio.', 'dst' => '../admin/dominio.php?dmn=' . $this->m_object->__get('id') ) );
 				
 			}
 
@@ -132,105 +136,6 @@ class ControllerDominio extends Icontroller {
 
 
 
-	/*
-	protected function getModelo(){
-		
-		$m_modeloObjeto = new ModeloObjeto( array( 'id' => $this->dados['id'] ) );
-
-		$modelo = array();
-		$modelo['id'] = $m_modeloObjeto->__get('id');
-		$modelo['nome'] = $m_modeloObjeto->__get('nome');
-		$modelo['num_questoes'] = $m_modeloObjeto->__get('num_questoes');
-		$modelo['pes_satisfacao'] = $m_modeloObjeto->__get('pes_satisfacao');
-		$modelo['peso'] = $m_modeloObjeto->__get('peso');
-		$modelo['media'] = $m_modeloObjeto->__get('media');
-		$modelo['prazo'] = $m_modeloObjeto->__get('prazo');
-		$modelo['banner'] = $m_modeloObjeto->__get('banner');
-		$modelo['msg_inicial'] = $m_modeloObjeto->__get('msg_inicial');
-
-		$this->retornoAjax( array( 'cod' => 1, 'msg' => 'Ok', 'modelo' => $modelo ) );
-
-	}
-	*/
-
-	protected function listModelos(){
-
-		$this->m_object->__set( 'Dominio', $this->dados );
-
-		$this->m_object->getModelosObjeto();
-
-		$model = array();
-
-		foreach ( $this->m_object->modelosObjeto as $modelo ) {
-						
-			$mdl = array();
-			$mdl['id'] = $modelo->__get('id');
-			$mdl['nome'] = $modelo->__get('nome');
-			$mdl['num_questoes'] = $modelo->__get('num_questoes');
-			$mdl['peso'] = $modelo->__get('peso');
-			$mdl['media'] = $modelo->__get('media');
-			$mdl['tentativas'] = $modelo->__get('tentativas');
-			$mdl['pes_satisfacao'] = $modelo->__get('pes_satisfacao');
-
-			$model[] = $mdl;			
-		}
-
-		$this->retornoAjax( array( 'cod' => 1, 'msg' => 'Ok', 'modelos' => $model ) );
-
-	}
-
-
-
-	protected function salvarModelo(){
-
-		$this->m_object->__set( 'Dominio', $this->dados );	
-
-		if( empty( $this->dados['arquivo'] ) ){
-
-			$dadosUpload = array( 
-							'diretorio' => $this->m_object->__get('diretorio'),
-							'caminho_relativo' => 'dominio'
-							);
-
-			$UploadBanner = new UploadBanner( $dadosUpload );
-			$retorno = $UploadBanner->getInformacoesArquivo();
-
-			if( $retorno['retorno']['cod'] ){
-
-				$this->m_object->__set( 'Dominio', array( 'imagem' => $retorno['nome_arquivo'] ) );
-
-			}else{
-
-				$this->redirect( array( 'msg' => 'Erro ao gravar arquivo: <br>' . $retorno['retorno']['msg'] ) );
-			}
-					
-		}
-
-		if( empty( $this->m_object->__get('id') ) ){
-
-			$this->object_id = $this->m_object->novo();
-				
-			if( !$this->object_id ){
-
-				$this->redirect( array( 'msg' => 'Erro ao gravar domínio.' ) );
-			}
-
-		}else{
-
-			$this->object_id = $this->m_object->__get('id');
-
-			$retorno = $this->m_object->editar();
-
-			if( !$retorno ){
-
-				$this->redirect( array( 'msg' => 'Erro ao gravar domínio.', 'dst' => '../view/dominio.php?dmn=' . $this->m_object->__get('id') ) );		
-			}
-		}
-
-		$this->m_object->__set('Dominio', array( 'id' => $this->object_id ) );
-
-		$this->redirect( array( 'msg' => 'Domínio gravado com sucesso.', 'dst' => '../view/dominio.php?dmn=' . $this->object_id ) );
-	}
 
 }
 ?>

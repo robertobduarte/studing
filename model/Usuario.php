@@ -49,18 +49,21 @@ class Usuario extends IObject{
 
 
 	
-	public function getUsuarios() {
+	public function getUsuarios( $filtros = null ) {
 
 		$daoUsuario = new DaoUsuario();
 
-		$dados = $daoUsuario->listar();
+		$usuarios = $daoUsuario->listar( $filtros );
 
-		foreach ($dados as $value) {
+		foreach ($usuarios as $value) {
 			
 			$usuario = new Usuario();
 			$usuario->__set( $usuario, $value );
-			$this::$instances[] = $usuario;   
 
+			$m_pessoa = new DaoPessoa( $value['pessoa'] );
+			$usuario->__set( $usuario, array('pessoa' => $m_pessoa ) );
+
+			$this::$instances[] = $usuario;   
 		}
 	}
 
@@ -77,6 +80,9 @@ class Usuario extends IObject{
 		$this->permissao = $permissoes;
 
 	}
+
+
+
 
 
 }

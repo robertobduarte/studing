@@ -65,10 +65,11 @@ class Autenticacao{
 
 	/*
 	Verifica se possui a permissão adequada, passada por argumento do método. Retorna true ou false
+	param $permissoes - pode ser um array com as permissões esperadas do usuário. 
 	*/
 	public function hasPermission( $permissoes = '', $condicao = null ){
 
-		if( empty( $permissoes ) ) return true;
+		if( empty( $permissoes ) ) return true; //Caso não seja enviado nenhuma permissao necessária, retorna true;
 
 		if( is_array( $permissoes ) ){
 
@@ -159,7 +160,34 @@ class Autenticacao{
 	}
 
 
-		/*
+
+	/*
+	Verifia se o usuário logado em permissão de acesso ao domínio - retorna true ou false
+	*/
+	public function CheckDominio( $dominio_id ){
+
+		$retorno = true;
+		$m_usuario = new Usuario();
+
+		$perfil = $this->m_session->getValue('perfil');
+		$perfil_nome = $this->m_session->getValue('perfil_nome');
+		$usuarioid = $this->m_session->getValue('usuarioid');
+
+		if( !in_array( $perfil, array( 'ADM' ) ) ){
+
+			$daoUsuario = new DaoUsuario();
+
+			$perfilDominio = $daoUsuario->checkAcessDominio( $dominio_id,  $usuarioid );
+
+			$retorno = ( !empty( $perfilDominio ) )? true : false;
+
+		}
+
+		return $retorno;
+	}
+
+	
+	/*
 	Verifia se o usuário logado em permissão para acessar um dominio
 	*/
 	public function checkAcessDominio( $dominio_id ){

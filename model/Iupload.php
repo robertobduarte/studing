@@ -70,7 +70,7 @@ abstract class Iupload {
 		$this->caminho_relativo_final = ( !$this->diretorio )? $this->caminho_relativo . '/' : $this->caminho_relativo . '/' . $this->diretorio . '/';
 		
 		//concatenação do caminho ABSOLUTO com o diretório
-		$this->caminho_absoluto_final = ( !$this->diretorio )? $this->caminho_absoluto . '/' : $this->caminho_absoluto . '/' . $this->diretorio . '/';
+		$this->caminho_absoluto_final = ( !$this->diretorio )? $this->caminho_absoluto : $this->caminho_absoluto . '/' . $this->diretorio . '/';
 		
 		//define um prefixo para o nome do arquivo, caso exista
 		$this->prefixo_nome = ( isset( $dados['prefixo'] ) && !empty( $dados['prefixo']  ) )? $dados['prefixo'] : false;
@@ -295,8 +295,7 @@ abstract class Iupload {
 		$informacoes = array(
 							'caminho_relativo' => $this->caminho_relativo,
 							'caminho_absoluto' => $this->caminho_absoluto,
-							'caminho_relativo_final' => $this->caminho_relativo_final,
-							'caminho_absoluto_final' => $this->caminho_absoluto_final,							
+							'caminho_relativo_final' => $this->caminho_relativo_final,						
 							'diretorio' => $this->diretorio,
 							'prefixo_nome' => $this->prefixo_nome,							
 							'nome_original_arquivo' => $this->nome_original_arquivo,
