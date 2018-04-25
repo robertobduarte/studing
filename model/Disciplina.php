@@ -47,6 +47,74 @@ class Disciplina extends IObject {
 	}
 
 
+	public function listarDisponiveisObjetivo( $dominio, $objetivo ){
+
+		$daoDisciplina = new DaoDisciplina();
+
+		$disciplinas = $daoDisciplina->listarDisponiveisObjetivo( $dominio, $objetivo );
+		
+		if( $disciplinas ){
+
+			foreach ( $disciplinas as $value ) {
+
+				$disciplina = new Disciplina();
+				$disciplina->__set( $disciplina, $value );
+		
+				Disciplina::$instances[] = $disciplina; 
+			}
+		}
+
+		return Disciplina::$instances;
+
+	}
+
+
+	public function listarUtilizadasObjetivo( $objetivo ){
+
+		$daoDisciplina = new DaoDisciplina();
+
+		$disciplinas = $daoDisciplina->listarUtilizadasObjetivo( $objetivo );
+		
+		$arrayDisciplinas = array();
+
+		if( $disciplinas ){
+
+			foreach ( $disciplinas as $value ) {
+
+				$disciplina = new Disciplina();
+				$disciplina->__set( $disciplina, $value );
+		
+				$arrayDisciplinas[] = $disciplina; 
+			}
+		}
+
+		return $arrayDisciplinas;
+
+	}
+
+
+	public function addDisciplinaObjetivo( $objetivo ){
+
+		$daoDisciplina = new DaoDisciplina();
+
+		$retorno = $daoDisciplina->addDisciplinaObjetivo( $this->__get('id'), $objetivo );
+		
+		return $retorno;
+
+	}
+
+	
+	public function rmDisciplinaObjetivo( $objetivo ){
+
+		$daoDisciplina = new DaoDisciplina();
+
+		$retorno = $daoDisciplina->rmDisciplinaObjetivo( $this->__get('id'), $objetivo );
+		
+		return $retorno;
+
+	}
+
+
 
 	protected function defineTipos(){
 
@@ -260,9 +328,11 @@ class Disciplina extends IObject {
 								
 								$form .= '<div class="col-md-12">';
 
-									$form .= '<ul class="unlist" id="listCompetencias"></ul>';
+									$form .= '<ul class="list-unstyled" id="listCompetencias"></ul>';
 
 								$form .= '</div>';
+
+								$form .= '<div id="mensagem_competencia"></div>';
 								
 							$form .= '</div>';
 
@@ -297,7 +367,9 @@ class Disciplina extends IObject {
 
 						$form .= '</form>';
 
-						$form .= '<div id="mensagem_disciplina"></div>';
+						$form .= '<div class="row">';
+							$form .= '<div class="col-md-12" id="mensagem_disciplina"></div>';
+						$form .= '</div>';
 
 					$form .= '</div>';
 

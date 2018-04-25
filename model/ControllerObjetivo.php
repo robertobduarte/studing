@@ -21,6 +21,9 @@ class ControllerObjetivo extends Icontroller {
 
 	protected function startAction(){
 
+		//verifica se tem permissão para o domínio enviado por post
+		$this->m_autenticacao->checkAcessDominio( $this->dados['dominio'] );
+
 		switch ( $this->action ) {
 
 			case 'salvar':
@@ -31,6 +34,17 @@ class ControllerObjetivo extends Icontroller {
 				}
 
 				$this->salvar();
+				break;
+
+
+			case 'getDisciplinasObjetivo':
+
+				if( !$this->m_autenticacao->hasPermission( array( 'C', 'U' ) ) ){
+
+					$this->redirect( array( 'msg' => 'Usuário sem permissão para esta ação.' ) );					
+				}
+
+				$this->getDisciplinasObjetivo();
 				break;
 			
 			default:
@@ -67,6 +81,29 @@ class ControllerObjetivo extends Icontroller {
 		}
 
 		$this->redirect( array( 'msg' => 'Objetivo gravado com sucesso.', 'dst' => '../admin/objetivo.php?obj=' . $this->object_id . '&dmn=' . $this->m_object->__get('dominio')) );
+	}
+
+	//busca todas as disciplinas que estão vinculadas ao objetivo
+	protected function getDisciplinasObjetivo(){
+
+		$this->m_object->__set( 'Objetivo', $this->dados );
+
+		if( !empty( $this->m_object->__get('id') ) ){
+
+			$this->m_object->getDisciplinas();
+
+			$disciplinas = array();
+			foreach ( $this->m_object->__get('disciplinas') as $disciplina ) {
+					
+				$disciplinas[] = array( 'id' => $disciplina->__get('id'), 'nome' => $disciplina->__get('nome') );
+			}
+
+			$this->retornoAjax( array( 'cod' => 1, 'msg' => 'ok.', 'disciplinas' => $disciplinas ) );
+
+		}
+
+		$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Erro. Dados inconsistentes.' ) );	
+
 	}
 
 

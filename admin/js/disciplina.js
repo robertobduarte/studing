@@ -8,6 +8,35 @@ $( document ).ready( function(){
 		var disciplina = id.substr( id.indexOf(''+1) );
 		
 		getDisciplina(disciplina);
+	});
+
+	//remover uma competencia
+	$( document ).on( "click", "span[id*='rmcompetencia_']", function(){
+			
+			var competencia = getId( $(this) );
+
+			//var competencia = id.substr( id.indexOf('_')+1 );
+			$('li[id*="comp_'+competencia+'"]').addClass('remover');
+
+			confirmarRemoverCompetencia(competencia);
+	});
+	//cancelou remoção competencia
+	$( document ).on("click", "input[id*='ccomp_']", function(){
+
+		var competencia = getId( $(this) );
+		//var competencia = id.substr(id.indexOf('_')+1);
+
+		$('#comp_'+competencia).removeClass('remover');
+		$('#comp_'+competencia).find('input').remove();
+	});
+
+	//confirmou remoção competencia
+	$( document ).on("click", "input[id*='rmcomp_']", function(){
+
+		var competencia = getId( $(this) );
+		//var competencia = id.substr(id.indexOf('_')+1);
+
+		removerCompetencia( competencia );
 
 	});
 
@@ -16,7 +45,6 @@ $( document ).ready( function(){
 		limpaDadosModal();
 		showModal();
 	});
-
 
 	//salvar uma disciplina (nova ou edição)
 	$('button[id*="salvar"').click( function(){
@@ -49,11 +77,9 @@ $( document ).ready( function(){
 			$('input[name="competencia_nome"]').parent().append('<span class="error" id="errorComp">Campo obrigatório</span>');
 			$(this).attr('disabled', false );
 			return false;
-
 		}			
 		
-		addCompetencia();
-		$(this).attr('disabled', false ); 
+		addCompetencia(); 
 			
 	});
 
@@ -91,6 +117,12 @@ function validarForm( idObjForm ){
 	});
 
 	return ( error > 0 )? false : true;
+}
+
+
+function confirmarRemoverCompetencia(id){
+
+	$('#comp_'+id).append('<input id="rmcomp_'+id+'" type="button" style="margin:0 5px;" class="btn btn-danger" value="Excluir"><input type="button" id="ccomp_'+id+'" value="Cancelar" class="btn btn-success">');
 }
 
 
@@ -132,15 +164,21 @@ function populaModal( disciplina ){
 		var competencias = '';
 		
 		for( var i = 0; i < disciplina['competencias'].length; i++ ){
-			competencias += '<li>' + disciplina['competencias'][i]['nome'] + '</li>';
-		}
 
-		$('#listCompetencias').append(competencias);
+			listCompetencia( disciplina['competencias'][i]['id'], disciplina['competencias'][i]['nome'] );
+		}
 	}
 	
-
 	showModal();
 }	
+
+
+function listCompetencia( id, nome ){
+
+	var icnRemover = '<span style="cursor:pointer; margin-right:5px;" id="rmcompetencia_' + id + '" class="glyphicon glyphicon-remove"></span>';
+	competencia = '<li id="comp_'+id+'">' + icnRemover + nome + '</li>';
+	$('#listCompetencias').append(competencia);
+}
 
 
 function showModal(){	
@@ -186,6 +224,10 @@ function salvar(){
 
 				$('#mensagem_disciplina').append('<div class="alert alert-danger col-md-12">' + obj['msg'] + '</div>');
 			}
+
+			setTimeout(function() { 
+				$('#mensagem_disciplina').find('div').remove();
+			}, 6000);
 		}
 	});
 
@@ -216,6 +258,10 @@ function getDisciplina( disciplina ){
 
 				$('#mensagem_disciplina').append('<div class="alert alert-danger col-md-12">' + obj['msg'] + '</div>');
 			}
+
+			setTimeout(function() { 
+				$('#mensagem_disciplina').find('div').remove();
+			}, 6000);
 		}
 	});
 
@@ -265,6 +311,8 @@ function atualizaDisciplinas( disciplinas ){
 
 function addCompetencia(){
 
+	$('#mensagem_competencia').find('div').remove();
+
 	var nome = $('input[name="competencia_nome"]').val();
 
 	var formData = new FormData();
@@ -290,13 +338,55 @@ function addCompetencia(){
 			if( obj['cod'] == 1 ){
 
 				$('input[name="competencia_nome"]').val('');
-				$('#listCompetencias').append('<li>' + nome + '</li>');
+				listCompetencia( obj['id'], nome );
 
 			}else{
 
 				$('#mensagem_competencia').append('<div class="alert alert-danger col-md-12">' + obj['msg'] + '</div>');
 			}
+
+			$('#addCompetencia').attr('disabled', false );
+
+			setTimeout(function() { 
+				$('#mensagem_competencia').find('div').remove();
+			}, 6000);
 		}
 	});
 
+}
+
+
+function removerCompetencia(id){
+
+	$('#comp_'+id).find('input').remove();
+	$('#mensagem_competencia').find('div').remove();
+
+	$.ajax({
+		url:"../controller/controllerCompetencia.php",
+		data: { id: id,
+			method: 'ajaxRequest',
+				action: 'remover'
+			},
+		type: 'POST',
+
+		success: function( data ){
+
+			var obj = jQuery.parseJSON(data);
+
+			if( obj['cod'] ){
+
+				$('#comp_'+id).remove();
+
+			}else{
+
+				$('#comp_'+id).removeClass('remover');
+				$('#mensagem_competencia').append('<div class="alert alert-danger col-md-12">' + obj['msg'] + '</div>');
+
+			}
+
+			setTimeout(function() { 
+				$('#mensagem_competencia').find('div').remove();
+			}, 6000);
+		}
+	});
 }

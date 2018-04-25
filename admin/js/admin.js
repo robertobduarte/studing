@@ -33,6 +33,14 @@ $( document ).ready( function(){
 	});
 	*/
 
+	$( 'div[id*="linkDisciplina_"]' ).hover(
+	  function() {
+	    $(this).addClass('linkActive');
+	  }, function() {
+	    $(this).removeClass('linkActive');
+	  }
+	);
+
 
 
 	//sanfona exibindo os objetivos e seus filhos
@@ -56,34 +64,18 @@ $( document ).ready( function(){
 
 	});
 
-/*
-		//Carrega o editor html no textarea com a classe "mceEditor"
-    tinyMCE.init({
-        mode : "specific_textareas",
-       
-        force_br_newlines : false,
-        force_p_newlines : false,
-        forced_root_block : '', 
-       
-        editor_selector : "mceEditor",
-        auto_focus: '',
-        height: 300,
-        plugins: [
-            'advlist autolink lists link charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen',
-            'insertdatetime table contextmenu paste code'
-        ],
-        toolbar: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
-        content_css: [
-            '//fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
-            '//www.tinymce.com/css/codepen.min.css'
-        ]
-    });
-*/
 
 });
 
 
+function getId(object){
+
+	var id = object.attr('id');
+	id = id.substr(id.indexOf('_')+1 );
+
+	return id;
+
+}
 
 function setHeightPanel_main_page(){
 	var dimensoes = getSizeView();

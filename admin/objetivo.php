@@ -1,18 +1,8 @@
 <?php
 include_once __DIR__ . "/headDominio.php"; //página instancia um dominio - $m_dominio
 
-
 $objetivo_id = ( isset( $_REQUEST['obj'] ) )? $_REQUEST['obj'] : '';
 $parent_id = ( isset( $_REQUEST['prt'] ) )? $_REQUEST['prt'] : '';
-
-
-if( empty( $objetivo_id ) && empty( $m_dominio->__get('id') ) ){
-
-	$m_session->setValue( 'mensagem', 'Parâmetros incorretos.' );
-	header("location: acessonegado.php");
-	exit();	
-}
-
 
 if( !empty( $objetivo_id ) ){
 
@@ -22,13 +12,10 @@ if( !empty( $objetivo_id ) ){
 	$m_objetivo->setTree();
 	$m_objetivo->getChildren();
 
-	$m_dominio = new Dominio( array('id' => $m_objetivo->__get( 'dominio' ) ) );
-
 }else{
 
 	$m_objetivo = new Objetivo();
 	$m_objetivo->__set( 'Objetivo', array( 'dominio' => $m_dominio->__get('id') ) );
-	$m_dominio = new Dominio( array('id' => $m_dominio->__get('id') ) );
 
 	if( !empty( $parent_id ) ){
 
@@ -38,10 +25,12 @@ if( !empty( $objetivo_id ) ){
 	$m_objetivoParent = new Objetivo( array( 'id' => $parent_id ) );
 	$m_objetivoParent->getParents();
 	$m_objetivoParent->setTree( true );
-
 }
 
 $m_objetivo->getTiposObjetivos();
+
+//popula o atributo do objeto com as disciplinas que estão vinculadas ao objetivo
+$m_objetivo->getDisciplinas();
 
 ?>
 
@@ -75,12 +64,9 @@ $m_objetivo->getTiposObjetivos();
 
 			<section class="col-md-12" id="objetivo">
 
-				
 				<?php $m_objetivo->showFormulario( $m_session ); ?>
 				
-			</section> <!-- #objetivo -->
-
-			<div class="col-md-12 divesp"></div>			
+			</section> <!-- #objetivo -->					
 						
 			<div class="col-md-12 divesp"></div>
 
@@ -102,9 +88,24 @@ $m_objetivo->getTiposObjetivos();
 
 					</div>
 
+					<div class="col-md-12 divesp"></div>	
+
 				<?php } ?>
 			
 			</section> <!-- #objetivosfilhos -->
+
+			<section class="col-md-12 divDestaqueClara" id="disciplinas">
+
+				<?php $m_objetivo->showFormularioDisciplinas( $m_session ); ?>
+				
+				<div class="row">	    			
+	    			<div class="col-md-12 titulomd">
+	    				<span>Banco de questões</2></span>
+	    			</div>
+					<?php $m_objetivo->showLinksBQDisciplinas(); ?>
+				</div>
+				
+			</section> <!-- #disciplinas -->
 
 
 			<form id="novoObj" method="POST">

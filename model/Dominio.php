@@ -154,27 +154,6 @@ class Dominio extends IObject {
 	
 
 
-	/*public function __set( $classe , $dominio ) {
-
-	 	foreach ( $dominio as $key => $value ) {
-
-	 		if( property_exists( $classe, $key ) ){
-				
-				$value = ( empty( $value ) ) ? NULL : $value;
-				$this->$key = $value;
-	 		}
-	 	}
-    }
-
-	public function __get( $name ) {
-
-	 	if( property_exists( $this, $name ) ){
-
-	 		return $this->$name;
-	 	}
-    }*/
-
-
     public function buttonNovoDominio(){
 
     	$bts = '';

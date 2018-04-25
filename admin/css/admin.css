@@ -645,3 +645,64 @@ a:focus {
   background: #f6d4d4 none repeat scroll 0% 0%;
   border-color: red;
 }
+
+
+
+
+
+
+.remover{
+  color:red;
+}
+
+.listDisciplinas{
+  padding: 20px 30px;
+}
+
+.disciplinasDisponiveis{
+  background: #e8e8e8;
+  border-right: 2px solid #b0b0b0;
+}
+
+.disciplinasVinculadas{
+  background: #e8e8e8;
+}
+
+.addDisc{
+  cursor: pointer;
+}
+
+.addDiscActive{
+  background: #0a0830!important;
+  font-weight:bold!important;
+  color:white!important;
+}
+
+.rmDiscActive{
+  background: #9f0a0a!important;
+  font-weight:bold!important;
+  color:white!important;
+}
+
+.linkDisciplina {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    color: #0a0830;
+    font-size: 1em;
+    font-weight:bold;
+}
+
+.titulomd{
+  font-weight: bold;
+  font-size: 1.5em;
+  color: #0a0830;
+  background: #c6c6c6;
+  margin: 15px 0;
+}
+
+.linkActive {
+  background: #c6c6c6;
+  color: white !important;
+  border-radius: 6px;
+}

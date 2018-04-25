@@ -18,6 +18,8 @@ class Objetivo extends IObject{
 	private $lastParent;
 	private $parents = array();
 	private $children = array();	
+	private $disciplinas = array();	
+	private $slides = array();	
 	private $tree;
 	private $tiposObjetivos;
 
@@ -174,10 +176,26 @@ class Objetivo extends IObject{
 		$tiposObjetivos = $daoObjetivo->getTiposObjetivos();
 
 		$this->tiposObjetivos = $tiposObjetivos;
+    }
 
-		/*echo '<pre>';
-		print_r($this->tiposObjetivos);
-		echo '</pre>';*/
+
+    public function getDisciplinas(){
+
+    	$m_disciplina = new Disciplina();
+
+		$disciplinas = $m_disciplina->listarUtilizadasObjetivo( $this->__get('id') );
+
+		$this->disciplinas = $disciplinas;
+    }
+
+
+    public function getSlides( $disciplina_id = '' ){
+
+    	$m_slide = new Slide();
+
+		$slides = $m_slide->getSlidesByObjetivo( $this->__get('id'), $disciplina_id );
+
+		$this->slides = $slides;
     }
 
 
@@ -313,7 +331,7 @@ class Objetivo extends IObject{
 
 				$icone = ( $i < $qtdFilhos )? ' <i class="fa fa-angle-right" aria-hidden="true"></i> ' : ''; 
 
-				$tree .= $icone . '<a href="objetivo.php?obj=' . $this->parents[$i]['id'] . '">' . $this->parents[$i]['tipo'] . ': ' . $this->parents[$i]['nome'] . '</a>';
+				$tree .= $icone . '<a href="objetivo.php?dmn=' . $this->__get('dominio') . '&obj=' . $this->parents[$i]['id'] . '">' . $this->parents[$i]['tipo'] . ': ' . $this->parents[$i]['nome'] . '</a>';
 
 			}
 		}
@@ -397,71 +415,75 @@ class Objetivo extends IObject{
 			$form .= '<input type="hidden" name="action" value="salvar">';
 
 
-			$form .= '<div class="col-md-12">';
-				$form .= '<div class="form-group">';
-					$form .= '<label for="nome">Nome</label>';
-					$form .= '<input type="text" name="nome" class="form-control req" id="nome_' . $this->__get('id') . '" placeholder="Nome do objetivo" value="' . $this->__get('nome') . '">';
-				$form .= '</div>';
-			$form .= '</div>';
-
-			$form .= '<div class="col-md-2 col-sm-3 col-xs-12">';
-				$form .= '<div class="form-group">';
-					$form .= '<label for="ordem">Ordem</label>';
-					$form .= '<input type="text" name="ordem" class="form-control req" id="ordem_' . $this->__get('id') . '" placeholder="Ordem" value="' . $this->__get('ordem') . '">';
-				$form .= '</div>';
-			$form .= '</div>';
-
-			$form .= '<div class="col-md-3 col-sm-4 col-xs-12">';
-				$form .= '<div class="form-group">';
-					$form .= '<label for="alias">Tipo</label>';
-					$form .= '<select class="form-control req" id="objetivoTipo" name="objetivo_tipo">';
-						$form .= '<option value="">Selecione</option>';
-
-							foreach ( $this->tiposObjetivos as $objTipo ) {
-								$select = ( $objTipo['id'] == $this->__get('objetivo_tipo') ) ? ' selected ' : '';
-								$form .= '<option ' . $select . ' value="' . $objTipo['id'] . '">' . $objTipo['nome'] . '</option>';
-							}
-
-					$form .= '</select>';
-				$form .= '</div>';
-			$form .= '</div>';			
-
-			$form .= '<div class="col-md-12">';
-				$form .= '<div class="form-group">';
-					$form .= '<label for="alias">descricao</label>';
-					$form .= '<textarea class="form-control" name="descricao" rows="3" id="descricao_' . $this->__get('id') . '">' . $this->__get('descricao') . '</textarea>';
-				$form .= '</div>';
-			$form .= '</div>';
-
-			$form .= '<div class="col-md-6 col-xs-12">';
-				$form .= '<fieldset class="form-group" id="objApr">';
-
-					$form .= '<legend>Tipo</legend>';
-
-					$form .= '<div class="form-check">';
-						$form .= '<label class="form-check-label">';
-						$checked = ( $this->__get('leaf') == 'N' )? 'checked' : '';
-						$form .= '<input type="radio" class="form-check-input" name="leaf" value="N" ' . $checked . ' >';
-						$form .= 'Grupo de objetivos';
-						$form .= '</label>';
+			$form .= '<div class="row">';
+				$form .= '<div class="col-md-12">';
+					$form .= '<div class="form-group">';
+						$form .= '<label for="nome">Nome</label>';
+						$form .= '<input type="text" name="nome" class="form-control req" id="nome_' . $this->__get('id') . '" placeholder="Nome do objetivo" value="' . $this->__get('nome') . '">';
 					$form .= '</div>';
+				$form .= '</div>';
 
-					$form .= '<div class="form-check">';
-						$form .= '<label class="form-check-label">';
-						$checked = ( $this->__get('leaf') == 'S' )? 'checked' : '';
-						$form .= '<input type="radio" class="form-check-input" name="leaf" value="S" ' . $checked . ' >';
-						$form .= 'Objetivo de aprendizagem';
-						$form .= '</label>';
+				$form .= '<div class="col-md-2 col-sm-3 col-xs-12">';
+					$form .= '<div class="form-group">';
+						$form .= '<label for="ordem">Ordem</label>';
+						$form .= '<input type="text" name="ordem" class="form-control req" id="ordem_' . $this->__get('id') . '" placeholder="Ordem" value="' . $this->__get('ordem') . '">';
 					$form .= '</div>';
+				$form .= '</div>';
 
-				$form .= '</fieldset>';
-			$form .= '</div>';
+				$form .= '<div class="col-md-3 col-sm-4 col-xs-12">';
+					$form .= '<div class="form-group">';
+						$form .= '<label for="alias">Tipo</label>';
+						$form .= '<select class="form-control req" id="objetivoTipo" name="objetivo_tipo">';
+							$form .= '<option value="">Selecione</option>';
+
+								foreach ( $this->tiposObjetivos as $objTipo ) {
+									$select = ( $objTipo['id'] == $this->__get('objetivo_tipo') ) ? ' selected ' : '';
+									$form .= '<option ' . $select . ' value="' . $objTipo['id'] . '">' . $objTipo['nome'] . '</option>';
+								}
+
+						$form .= '</select>';
+					$form .= '</div>';
+				$form .= '</div>';			
+
+				$form .= '<div class="col-md-12">';
+					$form .= '<div class="form-group">';
+						$form .= '<label for="alias">descricao</label>';
+						$form .= '<textarea class="form-control" name="descricao" rows="3" id="descricao_' . $this->__get('id') . '">' . $this->__get('descricao') . '</textarea>';
+					$form .= '</div>';
+				$form .= '</div>';
+
+				$form .= '<div class="col-md-6 col-xs-12">';
+					$form .= '<fieldset class="form-group" id="objApr">';
+
+						$form .= '<legend>Tipo</legend>';
+
+						$form .= '<div class="form-check">';
+							$form .= '<label class="form-check-label">';
+							$checked = ( $this->__get('leaf') == 'N' )? 'checked' : '';
+							$form .= '<input type="radio" class="form-check-input" name="leaf" value="N" ' . $checked . ' >';
+							$form .= 'Grupo de objetivos';
+							$form .= '</label>';
+						$form .= '</div>';
+
+						$form .= '<div class="form-check">';
+							$form .= '<label class="form-check-label">';
+							$checked = ( $this->__get('leaf') == 'S' )? 'checked' : '';
+							$form .= '<input type="radio" class="form-check-input" name="leaf" value="S" ' . $checked . ' >';
+							$form .= 'Objetivo de aprendizagem';
+							$form .= '</label>';
+						$form .= '</div>';
+
+					$form .= '</fieldset>';
+				$form .= '</div>';
 
 
-			$form .= '<div class="col-md-12">';
-				$form .= '<div class="col-md-3 col-md-offset-9 col-sm-6 col-sm-offset-6 col-xs-12">';
-					$form .= '<button type="submit" class="btn btn-primary btn-cor-primary btn-100" id="salvarObjetivo_' . $this->__get('id') . '">Salvar</button>';
-	 			$form .= '</div>';
+				$form .= '<div class="row">';
+					$form .= '<div class="col-md-12">';
+						$form .= '<div class="col-md-3 col-md-offset-9 col-sm-6 col-sm-offset-6 col-xs-12">';
+							$form .= '<button type="submit" class="btn btn-primary btn-cor-primary btn-100" id="salvarObjetivo_' . $this->__get('id') . '">Salvar</button>';
+			 			$form .= '</div>';
+			 		$form .= '</div>';
+		 		$form .= '</div>';
 	 		$form .= '</div>';
 
 		$form .= '</form>';
@@ -470,6 +492,211 @@ class Objetivo extends IObject{
 		echo $form;
 
 	}
+
+
+    public function showFormularioDisciplinas( Session $m_session ){
+
+
+    	$m_disciplina = new Disciplina();
+    	$m_disciplina->listarDisponiveisObjetivo( $this->__get('dominio'), $this->__get('id') );
+
+    	//caso o objetivo ainda não exista no BD, retorna falso.
+    	if( empty( $this->__get('id') ) ) return false;
+
+    	$form = '';
+
+    	$form .= '<div class="row">';
+	    	$form .= '<div class="col-md-12">';
+				$form .= '<div class="col-md-3 col-sm-5 col-xs-12">';
+					$form .= '<button type="button" class="btn btn-primary btn-cor-primary btn-100" id="addDisciplina">Adicionar disciplinas</button>';
+		 		$form .= '</div>';
+		 	$form .= '</div>';
+	 	$form .= '</div>';
+
+
+
+		$form .= '<div class="modal fade" id="modalDisciplinasObjetivo" tabindex="-1" role="dialog" aria-labelledby="">';
+
+			$form .= '<input type="hidden" name="objetivo" value="' . $this->__get('id') . '" >';
+
+			$form .= '<div class="modal-dialog" role="document">';
+
+				$form .= '<div class="modal-content">';
+						
+					$form .= '<div class="modal-header">';
+					    $form .= '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+					    $form .= '<h4 class="modal-title" id="">Disciplinas</h4>';
+					$form .= '</div>';
+					    
+					$form .= '<div class="modal-body">';
+
+						$form .= '<div class="row" style="padding: 0 20px;" >';
+
+							$form .= '<div class="col-md-6 disciplinasDisponiveis listDisciplinas">';
+
+								$form .= '<label>Disciplinas</label>';
+								
+									$form .= '<table class="table table-condensed" id="listDisciplinasDisponiveis">';
+
+											$form .= '<tbody class="table-hover">';
+
+											foreach ( $m_disciplina::$instances as $disciplina ) {
+												
+												$form .= '<tr><td class="addDisc" id="addDisc_' . $disciplina->__get('id') . '">' . $disciplina->__get('nome') . '<span class="glyphicon glyphicon-chevron-right"></span> </td></tr>';
+											}
+
+											$form .= '</tbody>';
+
+									$form .= '</table>';
+
+							$form .= '</div>';
+
+							$form .= '<div class="col-md-6 disciplinasVinculadas listDisciplinas">';
+
+								$form .= '<label>Vinculadas</label>';
+
+									$form .= '<table class="table table-condensed" id="listDisciplinasVinculadas">';
+
+											$form .= '<tbody class="table-hover">';
+
+											foreach ( $this->disciplinas as $disciplina ) {
+												
+												$form .= '<tr><td class="addDisc" id="removeDisc_' . $disciplina->__get('id') . '"><span class="glyphicon glyphicon-chevron-left"></span> ' . $disciplina->__get('nome') . '</td></tr>';
+											}
+											
+											$form .= '</tbody>';
+
+									$form .= '</table>';
+
+							$form .= '</div>';
+
+							$form .= '<div id="mensagem_disciplina"></div>';
+
+						$form .= '</div>';
+				
+					$form .= '</div>'; /*.body*/
+					
+					$form .= '<div class="modal-footer">';
+
+						$form .= '<button type="button" class="btn btn-default" id="fecharModal" >Fechar</button>';
+					$form .= '</div>';
+				
+				$form .= '</div>';
+
+			$form .= '</div>';
+
+		$form .= '</div>';
+
+		echo $form;
+
+	}
+
+
+	public function showLinksBQDisciplinas( $linkId = '' ){
+
+    	$form = '';
+
+	    $form .= '<div class="row" id="linksDisciplinas">';
+
+	    	foreach ( $this->disciplinas as $disciplina ) {	
+
+	    		$class = ( $linkId == $disciplina->__get('id') )? 'linkActive' : '';	
+
+				$form .= '<div class="col-md-2 col-sm-4 col-xs-6 linkDisciplina ' . $class . '" id="linkDisciplina_' . $disciplina->__get('id') . '">';
+
+					$form .= '<a href="bancodequestoes.php?dmn=' . $this->__get('dominio') . '&obj=' . $this->__get('id') . '&disc=' . $disciplina->__get('id') . '">';
+							
+					$form .= '<img src="img/estudar.png" alt="" class="img-circle" style="max-width:100px;"><br>';
+
+					$form .= '<span>' . $disciplina->__get('nome') . '</span>';
+
+					$form .= '</a>';
+
+				$form .= '</div>';		
+			}
+
+		$form .= '</div>';
+
+		echo $form;
+	}
+
+
+
+	public function showListSlides( $disciplina_id = '' ){
+
+    	$this->getSlides( $disciplina_id );
+    	
+    	$table = '';
+
+    	if( !empty( $this->id ) ){
+	    	if( !empty( $this->slides ) ){
+
+	    		$table .= '<table class="table table-striped" id="">';
+
+		    		$table .= '<thead>';
+		    			$table .= '<th></th>';
+		    			$table .= '<th>Pos.</th>';
+		    			$table .= '<th>Nº</th>';
+		    			$table .= '<th>Título</th>';
+		    			$table .= '<th>Enunciado</th>';
+		    			$table .= '<th>Status</th>';
+		    			$table .= '<th>Tipo</th>';
+		    		$table .= '</thead>';
+
+		    		$table .= '<tbody>';
+
+		    			foreach ( $this->slides as $slide ) {
+
+		    				$classe = ( $slide->__get('slide_tipo') == 'SL' )? ' tpSlide ' : '';
+
+		    				switch( $slide->__get('status') ){
+
+								case 'I':
+
+									$border = 'slideInativo';
+									$background = '';
+									break;
+
+								case 'A':
+
+									$border = 'slideAtivo';
+									$background = '';
+									break;
+
+		    				}
+
+		    				$icn = ( $slide->__get('slide_tipo') == 'SL' )? ' <i class="fa fa-file-text fa-4x" aria-hidden="true"></i> ' : $slide->__get('tipo');
+
+			    			$table .= '<tr id="tr_' . $slide->__get('id') . '" style="background:' . $background . ';">';
+			    				$table .= '<td width="3%" class="' . $border . '"><a href="slide.php?sld=' . $slide->__get('id') . '" class="" > <i class="fa fa-pencil" aria-hidden="true"></i></a></td>';
+			    				$table .= '<td width="3%">' . $slide->__get('posicao') . '</td>';
+			    				$table .= '<td width="3%">' . $slide->__get('numero') . '</td>';
+			    				$table .= '<td width="25%">' . strip_tags( $slide->__get('titulo') ) . '</td>';
+			    				$table .= '<td width="44%">' . $slide->__get('enunciado') . '</td>';
+			    				$table .= '<td width="5%">' . $slide->__get('status') . '</td>';
+			    				$table .= '<td width="10%">' . $icn . '</td>';
+			    				$table .= '<td width="10%">' . $btn . '</td>';
+			    			$table .= '</tr>';
+
+		    			}
+
+		    		$table .= '</tbody>';
+
+	    		$table .= '</table>';    		
+
+	    	}else{
+
+	    		$table .= '<div class="col-md-12 alert alert-warning">';
+					$table .= '<p>Não existem slides para este objeto/disciplina.</p>';
+				$table .= '</div>';
+	    	}
+    	}
+
+    	echo $table;
+
+    }
+
+
 
 }
 ?>

@@ -7,7 +7,7 @@ $dominios = $m_dominio->getDominios();
 /*$m_usuario = new Usuario();
 $usuarios = $m_usuario->getUsuarios();
 echo '<br><br><br><br><br><br><br><br><br><br><br><pre>';
-print_r($usuarios);
+print_r($_SESSION);
 echo '</pre>';
 exit('morri');*/
 

@@ -69,6 +69,28 @@ class ControllerDisciplina extends Icontroller {
 				break;
 
 
+			case 'addDisciplinaObjetivo':
+
+				if( !$this->m_autenticacao->hasPermission( array( 'C', 'U' ) ) ){
+
+					$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Sem permissão.' ) );						
+				}
+
+				$this->addDisciplinaObjetivo();
+				break;
+
+
+			case 'rmDisciplinaObjetivo':
+
+				if( !$this->m_autenticacao->hasPermission( array( 'C', 'U' ) ) ){
+
+					$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Sem permissão.' ) );						
+				}
+
+				$this->rmDisciplinaObjetivo();
+				break;
+
+
 			default:
 
 				$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Sem permissão.' ) );	
@@ -126,6 +148,34 @@ class ControllerDisciplina extends Icontroller {
 		}
 
 		$this->redirect( array( 'msg' => 'Disciplina excluída com sucesso.' ) );
+	}
+
+
+
+	protected function addDisciplinaObjetivo(){
+		
+		$this->m_object->__set( 'Disciplina', $this->dados );
+
+		if( !$this->m_object->addDisciplinaObjetivo( $this->dados['objetivo'] ) ){
+
+			$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Erro ao vincular disciplina ao objetivo.' ) );
+		}
+
+		$this->retornoAjax( array( 'cod' => 1, 'msg' => 'Disciplina vinculada com sucesso' ) );
+	}
+
+
+
+	protected function rmDisciplinaObjetivo(){
+		
+		$this->m_object->__set( 'Disciplina', $this->dados );
+
+		if( !$this->m_object->rmDisciplinaObjetivo( $this->dados['objetivo'] ) ){
+
+			$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Erro ao desvincular disciplina do objetivo.' ) );
+		}
+
+		$this->retornoAjax( array( 'cod' => 1, 'msg' => 'Disciplina desvinculada com sucesso' ) );
 	}
 
 

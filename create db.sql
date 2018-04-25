@@ -110,6 +110,44 @@ nome varchar(50) not null,
 disciplina int not null
 )
 
+CREATE TABLE disciplina_objetivo (
+  disciplina int NOT NULL,
+  objetivo int NOT NULL,
+  PRIMARY KEY (disciplina, objetivo)
+);
+
+
+CREATE TABLE slide (
+  id int auto_increment NOT NULL primary key,
+  enunciado text,
+  enunciado_html text,
+  objetivo int NOT NULL,
+  disciplina int NOT NULL
+  posicao integer,
+  status char(1) DEFAULT 'I',
+  correta char(1),
+  comentario text,
+  slide_tipo char(3) NOT NULL,
+  parent int,
+  peso float NOT NULL DEFAULT 1,
+  content_html text,
+  titulo varchar(300),
+  arquivo blob,
+  usuario int,
+  incluidoem datetime,
+  numero int,
+  nivel char(1) DEFAULT 'F',
+);
+
+
+CREATE TABLE slide_tipo (
+  id char(3) NOT NULL primary key,
+  nome varchar(50)
+);
+
+
+
+
 #insert pessoa
 insert into pessoa (nome, email) values
 ('Professor Azambuja', 'azambuja@professor.com'), 
@@ -164,3 +202,9 @@ insert into dominio (nome, alias, descricao, diretorio, mensagem) values
 #insert dominio_usuario
 insert into dominio_usuario (usuario, dominio, perfil) values
 (3, 3, 'PRF'), (4, 2, 'PRF');
+
+
+#insert tipo de slides
+insert into slide_tipo (id, nome) values
+('QH', 'Questão HTML'), ('QT', 'Questão texto'), ('SL', 'Slide');
+

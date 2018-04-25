@@ -35,7 +35,7 @@ class ControllerCompetencia extends Icontroller {
 				break;
 			
 
-			/*case 'remover':
+			case 'remover':
 
 				if( !$this->m_autenticacao->hasPermission('D') ){
 
@@ -44,7 +44,7 @@ class ControllerCompetencia extends Icontroller {
 				}
 
 				$this->remover();
-				break;*/
+				break;
 
 			default:
 
@@ -84,7 +84,7 @@ class ControllerCompetencia extends Icontroller {
 
 
 
-/*	protected function remover(){
+	protected function remover(){
 		
 		$this->m_object->__set( 'Competencia', $this->dados );
 
@@ -94,16 +94,16 @@ class ControllerCompetencia extends Icontroller {
 				
 			if( !$retorno ){
 
-				$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Erro ao excluir disciplina' ) );
+				$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Erro ao excluir competencia' ) );
 			}
 
 		}else{
 
-			$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Parâmetros incorretos. A disciplina não foi excluída.' ) );
+			$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Parâmetros incorretos. A competencia não foi excluída.' ) );
 		}
 
-		$this->redirect( array( 'msg' => 'Disciplina excluída com sucesso.' ) );
-	}*/
+		$this->retornoAjax( array( 'cod' => 1, 'msg' => 'Competencia excluída com sucesso.' ) );
+	}
 
 
 }

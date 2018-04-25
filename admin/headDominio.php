@@ -48,6 +48,15 @@ $m_session->setValue('dominio', $m_dominio->__get( 'id' ) );
 		<nav class="faixa"></nav>
 		<div class="container">
 
+			<div class="collapse navbar-collapse col-md-4 col-sm-12 pull-right" id="">				
+				<ul class = "nav navbar-nav pull-right">
+					<li id='nomeUser'><p><?= $m_dominio->__get( 'nome' ); ?></p></li>
+					<li id='nomeUser'><p><?= $m_session->getValue( 'nome' ); ?></p></li>
+					<li id='perfilUser'><p><?= $m_session->getValue( 'perfil_nome_dominio' );?></p></li>
+					<li class="active"><a href="sair.php">SAIR</a></li>
+				</ul>				
+			</div><!-- /.navbar-collapse -->
+
 			<div class="navbar-header">	
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
 			        <span class="sr-only">Toggle navigation</span>
