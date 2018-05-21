@@ -702,6 +702,12 @@ a:focus {
 }
 
 .linkActive {
+  background: #0a0830;
+  color: white !important;
+  border-radius: 6px;
+}
+
+.linkAct {
   background: #c6c6c6;
   color: white !important;
   border-radius: 6px;

@@ -94,6 +94,33 @@ class DaoCompetencia extends IDao{
 	}
 
 
+	public function getCompetenciaBySlide( $slide_id ){
+
+		try{
+
+			$sql = "SELECT * FROM competencia_slide WHERE slide = :slide_id";
+
+			$query = $this->conex->prepare( $sql );
+			$query->bindParam( ':slide_id', $slide_id );
+
+			$query->execute();
+
+			$competencias = array();
+			while( $competencia = $query->fetch( PDO::FETCH_ASSOC ) ){
+
+				$competencias[] = $competencia;
+			}
+
+			return $competencias;
+
+		}catch( Exception $e ){
+			$this->conex->rollback();
+			$this->falha( $this->conex->errorInfo() );
+		}
+
+	}
+
+
 
 
 	public function inserir( Iobject $competencia ){

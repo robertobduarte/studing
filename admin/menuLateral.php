@@ -16,7 +16,8 @@ echo '</pre>';
 
 	<div class="logoMenuLateral">
 		<a href="listObjetivos.php?dmn=<?=$m_dominio->__get('id')?>" class="" >			
-			<img src="img/logo.png" class="img-responsive" >
+			<!-- <img src="img/logo.png" class="img-responsive" > -->
+			<img src="img/secad.png" class="img-responsive" >
 		</a>
 	</div>
 

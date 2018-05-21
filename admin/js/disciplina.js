@@ -204,7 +204,7 @@ function salvar(){
 
 	$.ajax({
 
-		url:"../controller/controllerDisciplina.php",
+		url:"../controller/controller.php?c=disciplina",
 		data: formData,
 		type: 'POST',
 		processData: false,
@@ -239,7 +239,7 @@ function getDisciplina( disciplina ){
 	$('#mensagem_disciplina').find('div').remove();
 
 	$.ajax({
-		url:"../controller/controllerDisciplina.php",
+		url:"../controller/controller.php?c=disciplina",
 		data: 	{
 					action: 'getDisciplina',
 					method: 'ajaxRequest',
@@ -271,7 +271,7 @@ function getDisciplina( disciplina ){
 function carregaDisciplinas(){
 
 	$.ajax({
-		url:"../controller/controllerDisciplina.php",
+		url:"../controller/controller.php?c=disciplina",
 		data: 	{
 					action: 'listDisciplinas',
 					method: 'ajaxRequest',
@@ -325,7 +325,7 @@ function addCompetencia(){
 
 	$.ajax({
 
-		url:"../controller/controllerCompetencia.php",
+		url:"../controller/controller.php?c=competencia",
 		data: formData,
 		type: 'POST',
 		processData: false,
@@ -362,7 +362,7 @@ function removerCompetencia(id){
 	$('#mensagem_competencia').find('div').remove();
 
 	$.ajax({
-		url:"../controller/controllerCompetencia.php",
+		url:"../controller/controller.php?c=competencia",
 		data: { id: id,
 			method: 'ajaxRequest',
 				action: 'remover'

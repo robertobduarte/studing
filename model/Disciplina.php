@@ -4,7 +4,7 @@ include_once __DIR__ . "/../config.php";
 class Disciplina extends IObject {
 
 	public static $instances = array();
-	protected $controller = '../controller/controllerDisciplina.php';
+	protected $controller = '../controller/controller.php?c=disciplina';
 	private $id;
 	private $nome;
 	private $descricao;

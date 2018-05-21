@@ -35,9 +35,9 @@ $( document ).ready( function(){
 
 	$( 'div[id*="linkDisciplina_"]' ).hover(
 	  function() {
-	    $(this).addClass('linkActive');
+	    $(this).addClass('linkAct');
 	  }, function() {
-	    $(this).removeClass('linkActive');
+	    $(this).removeClass('linkAct');
 	  }
 	);
 

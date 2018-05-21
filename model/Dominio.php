@@ -5,7 +5,8 @@ class Dominio extends IObject {
 
 	public static $instances = array();
 	protected $tiposDeDados = array();
-	protected $controller = '../controller/controllerDominio.php';
+	//protected $controller = '../controller/controllerDominio.php';
+	protected $controller = '../controller/controller.php?c=dominio';
 	private $id;
 	private $nome;
 	private $alias;

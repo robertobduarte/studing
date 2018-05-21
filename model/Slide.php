@@ -5,7 +5,7 @@ class Slide extends IObject {
 
 	static $instances = array();
 	//protected $tiposDeDados = array();
-	protected $controller = '../controller/controllerSlide.php';
+	protected $controller = '../controller/controller.php?c=slide';
 	private $id;
 	private $titulo;
 	private $enunciado;
@@ -26,7 +26,9 @@ class Slide extends IObject {
 	private $peso = 1;
 	private $parent; //caso de ser um slide que seja filho de outro slide. Ex.: Pai: us slide com um texto. Filho: questões de interpretação do texto do slide pai
 	private $alternativas = array(); //Object Alternativa
-	
+	private $m_disciplina; //Object Disciplina
+	private $competencias = array(); //array de Object Conpetencia do slide
+
 
 	public function __construct( $dados = null ){
 
@@ -39,7 +41,6 @@ class Slide extends IObject {
 
 		$this->tiposDeDados = array( 
 									'id' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
-									'objeto' => array( 'type' => 'float', 'mandatory' => true, 'size' => false ),
 									'disciplina' => array( 'type' => 'int', 'mandatory' => true, 'size' => false ),
 									'posicao' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
 									'numero' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
@@ -49,10 +50,8 @@ class Slide extends IObject {
 									'parent' => array( 'type' => 'int', 'mandatory' => false, 'size' => false ),
 									'posicao' => array( 'type' => 'int', 'mandatory' => true, 'size' => 3),
 									'nivel' => array( 'type' => 'false', 'mandatory' => false, 'size' => 1),
-									'bloco' => array( 'type' => 'false', 'mandatory' => false, 'size' => 20),
-									'peso' => array( 'type' => 'float', 'mandatory' => true, 'size' => false),
-									'obj_versao' => array( 'type' => 'int', 'mandatory' => false, 'size' => false)
-									);
+									'peso' => array( 'type' => 'float', 'mandatory' => false, 'size' => false)
+								);
 	}
 
 
@@ -63,6 +62,16 @@ class Slide extends IObject {
 		$dados = $daoSlide->buscar( $slide_id );
 
 		$this->__set( $this, $dados );
+	}
+
+
+	public function getDisciplina( $disciplina_id = ''  ){
+
+		$disciplina_id = ( !empty( $disciplina_id ) )? $disciplina_id : $this->__get('disciplina');
+
+		$m_disciplina = new Disciplina( array( 'id' => $disciplina_id ) );
+
+		$this->__set( $this, array( 'm_disciplina' => $m_disciplina ) );
 	}
 
 
@@ -82,19 +91,17 @@ class Slide extends IObject {
 	}
 
 
-	/*
-	//Retorna o id do domínio que o slide pertence
-	//O Objeto Slide deve estar com o atributo objeto setado.	
-	public function getDominio(){
+	
+	//Retorna as competências que o slide tem.	
+	public function getCompetencias(){
 
-		$m_objeto = new Objeto();
+		$m_competencia = new Competencia();
 
-		$dominio_id = $m_objeto->getDominio( $this->__get('objeto') );
+		$competencias = $m_competencia->getCompetenciaBySlide( $this->__get('id') );
 
-		return $dominio_id;
+		$this->competencias = $competencias;
 
-	}*/
-
+	}
 	
 	/*
 	//Retorna o Objeto objeto (prova) que o slide pertence
@@ -113,7 +120,6 @@ class Slide extends IObject {
 	
 	/*retorna um array de Slides com todos os slides(questões) pertencentes a um objetivo. 
 	Se a disciplina for passada no segundo parâmetro, retorna apenas as questões do objetivo pertencentes a disciplina*/
-
 	public function getSlidesByObjetivo( $objetivo_id, $disciplina_id = '' ){
 
 		$daoSlide = new DaoSlide();
@@ -205,51 +211,44 @@ class Slide extends IObject {
     }
 
 
-    /*public function novo(){
+    public function novo(){
 
-    	$this->getObjeto( $this->__get('objeto') );
+    	$daoSlide = new DaoSlide();
 
-    	if( $this->prova->__get('status_versao') == 'I' ){
+    	$id = $daoSlide->inserir( $this );
 
-    		//define a versão do slide para a mesma vesão do objeto
-    		$this->obj_versao = $this->prova->__get('versao');
+    	$this->__set('Slide', array( 'id' => $id ) );
 
-    		$daoSlide = new DaoSlide();
+    	return $id;
+    }
 
-    		$slide_id = $daoSlide->inserir( $this );
 
-    		//echo 'sfdsf:' . $slide_id; exit();
-    		$this->id = ( $slide_id )? $slide_id : '';
+    public function editar(){
 
-    	}else{
-    		return false; 
+    	$daoSlide = new DaoSlide();
+
+    	return $daoSlide->editar( $this );
+
+    }
+
+
+    public function editarCompetencias( $competencias ){
+
+    	$daoSlide = new DaoSlide();
+
+    	$daoSlide->removerCompetencias( $this->__get('id') );
+
+    	$arrayCompetencias = explode( ',' , $competencias );
+
+    	if( !empty( $arrayCompetencias ) ){
+
+    		foreach ($arrayCompetencias as $comp) {
+
+    			$daoSlide->addCompetencia( $this->__get('id'), $comp );
+    		}
     	}
 
-		return $slide_id;
-    }*/
-
-
-    /*public function editar(){
-
-    	$this->getObjeto( $this->__get('objeto') );
-
-    	//cria um novo objeto para buscar a informação atual do slide no banco de dados
-    	
-    	$m_slide_actual = new Slide( array( 'id' => $this->__get('id') ) );
-
-    	if( $this->prova->__get('status_versao') == 'I' && in_array( $m_slide_actual->__get('status'), array( 'A', 'I' ) ) ){
-
-    		$daoSlide = new DaoSlide();
-
-    		$retorno = $daoSlide->editar( $this );
-
-    	}else{
-
-    		return false; 
-    	}
-
-		return $retorno;
-    }*/
+    }
 
 
     /*public function editarDadosArquivo( $id, $caminho, $nome_arquivo ){
@@ -366,11 +365,17 @@ class Slide extends IObject {
 
 
 
+    public function showLink( $dominio_id ){
+
+    	echo '<a href="bancodequestoes.php?dmn=' . $dominio_id .'&obj=' . $this->__get('objetivo') . '&disc=' . $this->__get('disciplina') . '">Banco de questões</a>';   		
+    }
+
+
     /*
     Imprimme o formulário para criar e editar um slide
     Param: Object Objeto, Object Session (obrigatórios)
     */
-    public function showFormulario( Objeto $m_objeto, Session $m_session ){
+    public function showFormulario( Objetivo $m_objetivo, Session $m_session, Autenticacao $m_autenticacao ){
 
 		if( empty( $this->__get('tipos') ) ){
 
@@ -378,12 +383,36 @@ class Slide extends IObject {
 
     	}
 
+		if( empty( $this->__get('m_disciplina') ) ){
+
+    		$this->getDisciplina();
+
+    	}
+
+    	$this->getCompetencias();
+    	
+
+    	/*echo '<pre>';
+    	print_r( $this->__get('competencias') );
+    	echo '</pre>';*/
+
+    	$competencias = '';
+    	$arrayComp = array();
+    	foreach ( $this->__get('competencias') as $m_competencia ) {
+
+    		$competencias .= ( !empty( $competencias ) )? ',' . $m_competencia->__get('id') : $m_competencia->__get('id');
+    		$arrayComp[] = $m_competencia->__get('id');
+    	}
+    	
     	$form = '';
 
     	$form .= '<form id="slide_' . $this->__get('id') . '" action="' . $this->__get('controller') . '" enctype="multipart/form-data" method="POST">';
 
 				$form .= '<input type="hidden" name="id" value="' . $this->__get('id') . '">';
-				$form .= '<input type="hidden" name="objeto" value="' . $m_objeto->__get('id') . '">';
+				$form .= '<input type="hidden" name="dominio" value="' . $m_objetivo->__get('dominio') . '">';
+				$form .= '<input type="hidden" name="objetivo" value="' . $m_objetivo->__get('id') . '">';
+				$form .= '<input type="hidden" name="disciplina" value="' . $this->__get('disciplina') . '">';
+				$form .= '<input type="hidden" name="competencias" value="' . $competencias . '">';
 				$form .= '<input type="hidden" name="action" value="salvar">';
 
 				$form .= '<div class="row">';
@@ -422,27 +451,29 @@ class Slide extends IObject {
 					$form .= '</div>';
 
 
-					$form .= '<div class="col-md-2 col-sm-3 col-xs-6">';
+					$form .= '<div class="col-md-2 col-sm-2 col-xs-6">';
+
 						$form .= '<div class="form-group">';
 							$peso = ( !empty( $this->__get('peso') ) )? $this->__get('peso') : 1;
 							$form .= '<label for="peso">Peso*</label>';
 							$form .= '<input type="text" name="peso" class="form-control int req" disabled="disabled" value="' . $peso . '" >';
 						$form .= '</div>';
-					$form .= '</div>';
+
+					$form .= '</div>';					
 
 				$form .= '</div>'; //.row    
 
 
 				$form .= '<div class="row">';
 
-					$form .= '<div class="col-md-2 col-sm-3 col-xs-8">';
+					$form .= '<div class="col-md-2 col-sm-3 col-xs-6">';
 							$form .= '<div class="form-group">';
 								$form .= '<label for="correta">Correta*</label>';
 								$form .= '<input type="text" name="correta" class="form-control" maxlength="1" style="text-transform: uppercase" value="' . $this->__get('correta') . '" >';
 							$form .= '</div>';
 						$form .= '</div>';				
 
-					$form .= '<div class="col-md-2 col-sm-3 col-xs-8">';
+					$form .= '<div class="col-md-2 col-sm-3 col-xs-6">';
 						$form .= '<div class="form-group">';
 							$form .= '<label for="pai">Slide</label>';
 							$form .= '<input type="text" name="parent" class="form-control" value="' . $this->__get('parent') . '" >';
@@ -450,7 +481,7 @@ class Slide extends IObject {
 					$form .= '</div>';
 
 
-					$form .= '<div class="col-md-4 col-sm-6 col-xs-12" id="objStatus">';
+					$form .= '<div class="col-md-3 col-sm-4 col-xs-6" id="objStatus">';
 
 							$form .= '<label for="versao">Status*</label>';
 							$form .= '<div class="form-group">';
@@ -469,13 +500,8 @@ class Slide extends IObject {
 							$form .= '</div>';
 
 					$form .= '</div>';
-						
-				$form .= '</div>'; //.row
 
-
-				$form .= '<div class="row">';
-
-					$form .= '<div class="col-md-4 col-sm-6 col-xs-12" id="objNivel">';
+					$form .= '<div class="col-md-4 col-sm-4 col-xs-6" id="objNivel">';
 
 							$form .= '<label for="versao">Nível*</label>';
 							$form .= '<div class="form-group">';
@@ -499,16 +525,53 @@ class Slide extends IObject {
 
 							$form .= '</div>';
 
+					$form .= '</div>';					
+						
+				$form .= '</div>'; //.row
+
+
+				$form .= '<div class="row">';
+
+					$form .= '<div class="col-md-3 col-sm-4 col-xs-12" id="competencias">';
+
+							$form .= '<div class="form-group">';
+								$form .= '<label for="pesq">Competência</label>';
+								$form .= '<select class="form-control" id="listCompetencia">';
+									$form .= '<option value="">Selecione</option>';
+									
+									if( count( $this->__get('m_disciplina')->__get('competencias') ) > 0 ) {
+
+										foreach ( $this->__get('m_disciplina')->__get('competencias') as $m_competencia ) {
+
+											$select = ( in_array( $m_competencia->__get('id'), $arrayComp ) )?  'disabled="disabled"' : '';
+
+											$form .= '<option ' . $select . ' value="' . $m_competencia->__get('id') . '">' . $m_competencia->__get('nome') . '</option>';
+
+										}
+
+									}								
+
+							    $form .= '</select>';   							    
+							
+							$form .= '</div>';
+							
 					$form .= '</div>';
 
-					/*$form .= '<div class="col-md-2 col-sm-6 col-xs-12">';
-						$form .= '<div class="form-group">';
-							$form .= '<label for="peso">Bloco*</label>';
-							$form .= '<input type="text" name="bloco" class="form-control" value="' . $this->__get('bloco') . '" >';
-						$form .= '</div>';
-					$form .= '</div>';*/
+					$form .= '<div class="col-md-4 col-sm-6 col-xs-12">';
+
+						$form .= '<ul class="list-unstyled" id="slideCompetencias">';
+
+							foreach ( $this->__get('competencias') as $m_competencia ) {
+
+					    		$form .= '<li id="comp_' . $m_competencia->__get('id') . '"><span style="cursor:pointer; margin-right:5px;" id="rmcompetencia_' . $m_competencia->__get('id') . '" class="glyphicon glyphicon-remove"></span>' . $m_competencia->__get('nome') . '</li>';
+					    	}
+
+						$form .= '</ul>';						
+
+					$form .= '</div>';
 
 				$form .= '</div>'; //.row
+
 
 				$form .= '<div class="col-md-12 divesp10"></div>';
 
@@ -521,9 +584,9 @@ class Slide extends IObject {
 						$form .= '</div>';
 					$form .= '</div>';					
 
-					$classe = ( trim( $this->__get('slide_tipo') ) == 'QU' )? '' : ' oculta ';
+					$classe = ( trim( $this->__get('slide_tipo') ) == 'QT' )? '' : ' oculta ';
 
-					$form .= '<div class="col-md-12 ' . $classe . '" id="slide_QU">';
+					$form .= '<div class="col-md-12 ' . $classe . '" id="slide_QT">';
 						$form .= '<label for="enunciado">Enunciado*</label>';
 						$form .= '<textarea class="form-control" rows="4" name="enunciado">' . $this->__get('enunciado') . '</textarea>';
 					$form .= '</div>';
@@ -559,45 +622,25 @@ class Slide extends IObject {
 				$form .= '<div class="col-md-12 divesp10"></div>';
 
 				$form .= '<div class="row">';
+					
+					$form .= '<div class="col-md-3 col-sm-6 col-xs-12">';
+							
+						$disabled = ( !$m_autenticacao->hasPermission( array( 'C', 'U' ) ) )? ' disabled ' : '';
 
-					if( $this->__get('replace') ){
+						$form .= '<button type="submit" class="btn btn-primary btn-cor-primary btn-100" ' . $disabled . ' id="salvarSlide_' . $this->__get('id') . '">Salvar</button>';
+
+					 $form .= '</div>';
+
+					 if( !empty( $this->__get('id') ) ){
 
 						$form .= '<div class="col-md-3 col-sm-6 col-xs-12">';
-								
-							$disabled = ( !array_intersect( array( 'C', 'U' ), $m_session->getValue( 'permissoes' ) ) || ( $m_objeto->__get('status_versao') == 'A' ) )? ' disabled ' : '';
 
-				 			$form .= '<button type="button" class="btn btn-primary btn-cor-primary btn-100" ' . $disabled . ' id="substituirSlide_' . $this->__get('id') . '">Substituir</button>';
+							$disabled = ( !$m_autenticacao->hasPermission( array( 'D' ) ) )? ' disabled ' : '';
 
-					 	$form .= '</div>';
-
-						$form .= '<div class="col-md-3 col-sm-6 col-xs-12">';
-
-							$form .= '<button type="button" class="btn btn-danger btn-100" ' . $disabled . ' id="anularSlide_' . $this->__get('id') . '">Anular Slide</button>';
+							$form .= '<button type="button" class="btn btn-danger btn-100" ' . $disabled . ' id="excluirSlide_' . $this->__get('id') . '">Excluir Slide</button>';
 
 				 		$form .= '</div>';
-
-					}else{
-
-						$form .= '<div class="col-md-3 col-sm-6 col-xs-12">';
-								
-							$disabled = ( !array_intersect( array( 'C', 'U' ), $m_session->getValue( 'permissoes' ) ) || ( $m_objeto->__get('status') == 'A' ) || !in_array( $this->__get('status'), array( 'I', 'A' ) ) )? ' disabled ' : '';
-
-				 			$form .= '<button type="submit" class="btn btn-primary btn-cor-primary btn-100" ' . $disabled . ' id="salvarSlide_' . $this->__get('id') . '">Salvar</button>';
-
-					 	$form .= '</div>';
-
-					 	if( !empty( $this->__get('id') ) ){
-
-							$form .= '<div class="col-md-3 col-sm-6 col-xs-12">';
-
-								$disabled = ( !array_intersect( array( 'D' ), $m_session->getValue( 'permissoes' ) ) || ( $m_objeto->__get('status') == 'A' ) || !in_array( $this->__get('status'), array( 'I', 'A' ) ) )? ' disabled ' : '';
-
-								$form .= '<button type="button" class="btn btn-danger btn-100" ' . $disabled . ' id="excluirSlide_' . $this->__get('id') . '">Excluir Slide</button>';
-
-				 			$form .= '</div>';
-			 			}
-
-					}					
+			 		}				
 
 	 			$form .= '</div>'; //.row		 		
 
@@ -609,7 +652,7 @@ class Slide extends IObject {
  
 
 
-    /*public function showAlternartivas( Objeto $m_objeto, Session $m_session ){
+    public function showAlternartivas( Session $m_session, Autenticacao $m_autenticacao ){
 
 
     	if ( ( trim( $this->__get('slide_tipo') ) ) != 'SL' ){ //Casos clínicos não possuem alternativas
@@ -624,8 +667,7 @@ class Slide extends IObject {
 
 	    	$table .= '<script src="js/alternativa.js?v=<?= filemtime("js/alternativa.js"); ?>"></script>';
 
-	    	$disabled = ( ( array_intersect( array( 'C', 'U', 'R' ), $m_session->getValue( 'permissoes' ) ) ) && ( !empty( $this->__get('id') ) ) && ( ( $m_objeto->__get('status') == 'I' ) || ( ( $m_objeto->__get('status_versao') == 'I' ) && ( $m_objeto->__get('versao') >= 2 ) && ( $m_objeto->__get('versao') == $this->__get('obj_versao') ) ) ) )? '' : ' disabled="disabled" ';
-
+	    	$disabled = ( !$m_autenticacao->hasPermission( array( 'C', 'U' ) ) )? ' disabled ' : '';
 
 	    	$table .= '<div class="col-md-3 col-md-offset-9 col-sm-5 col-sm-offset-7 col-xs-12">';
 	    	$table .= '<button type="button" class="btn btn-100 btn-primary btn-cor-primary" role="button" ' . $disabled . ' id="novaAlternativa_' . $this->__get('id') . '">Nova Alternativa</button>';
@@ -646,18 +688,22 @@ class Slide extends IObject {
 
 		    	$table .= '<tbody>';
 
+		    	/*echo '<pre>';
+		    	print_r($this->alternativas);
+		    	echo '</pre>';*/
+
 		    	if( !empty( $this->alternativas ) ){
 
-		    		foreach ( $this->alternativas as $alternativa ) {  
+		    		foreach ( $this->alternativas as $m_alternativa ) {  
 
-		    			$arquivo = ( !empty( $alternativa->__get('nome_arquivo') ) )? '<i class="fa fa-file-image-o" aria-hidden="true"></i>' : '';
-		    			$table .= '<tr id="tr_' . $alternativa->__get('id') . '">';
-		    				$table .= '<td><a id="alternativa_' . $alternativa->__get('id') . '" href="#"> <i class="fa fa-pencil" aria-hidden="true"></i></a></td>';
+		    			$arquivo = ( !empty( $m_alternativa->__get('arquivo') ) )? '<i class="fa fa-file-image-o" aria-hidden="true"></i>' : '';
+		    			$table .= '<tr id="tr_' . $m_alternativa->__get('id') . '">';
+		    				$table .= '<td><a id="alternativa_' . $m_alternativa->__get('id') . '" href="#"> <i class="fa fa-pencil" aria-hidden="true"></i></a></td>';
 		    				$table .= '<td>' . $arquivo . '</td>';
-		    				$table .= '<td>' . $alternativa->__get('tipo') . '</td>';
-		    				$table .= '<td>' . $alternativa->__get('valor') . '</td>';
-				    		$table .= '<td>' . $alternativa->__get('texto') . '</td>';
-				    		$table .= '<td>' . $alternativa->__get('texto_html') . '</td>';			    		
+		    				$table .= '<td>' . $m_alternativa->__get('tipo') . '</td>';
+		    				$table .= '<td>' . $m_alternativa->__get('valor') . '</td>';
+				    		$table .= '<td>' . $m_alternativa->__get('texto') . '</td>';
+				    		$table .= '<td>' . $m_alternativa->__get('texto_html') . '</td>';			    		
 				    	$table .= '</tr>';
 
 		    		}
@@ -665,7 +711,7 @@ class Slide extends IObject {
 	    		}else{
 
 	    			$table .= '<tr>';
-		    			$table .= '<td colspan="5"><div class="col-md-12 alert alert-warning"><p>Não existem alternativas cadastradas.</p></td></div>';
+		    			$table .= '<td colspan="6"><div class="col-md-12 alert alert-warning"><p>Não existem alternativas cadastradas.</p></td></div>';
 					$table .= '</tr>';
 	    	}
 
@@ -763,7 +809,7 @@ class Slide extends IObject {
 
 									$table .= '<div class="col-md-12">';
 
-									$disabled = ( ( array_intersect( array( 'C', 'U', 'R' ), $m_session->getValue( 'permissoes' ) ) ) && ( !empty( $this->__get('id') ) ) && ( ( $m_objeto->__get('status') == 'I' ) || ( ( $m_objeto->__get('status_versao') == 'I' ) && ( $m_objeto->__get('versao') >= 2 ) && ( $m_objeto->__get('versao') == $this->__get('obj_versao') ) ) ) )? '' : ' disabled="disabled" ';
+									$disabled = ( !$m_autenticacao->hasPermission( array( 'C', 'U', 'R' ) ) )? ' disabled ' : '';
 
 										$table .= '<div class="col-md-3 col-sm-4 col-xs-12" id="">';
 											$table .= '<button type="button" class="btn btn-100 btn-primary btn-cor-primary" role="button" ' . $disabled . ' id="salvarAlternativa_' . $this->__get('id') . '"><i class="fa fa-check"></i> Salvar</button>';
@@ -800,7 +846,7 @@ class Slide extends IObject {
 
     	}
 
-    }*/
+    }
 
 
 

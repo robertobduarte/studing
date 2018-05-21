@@ -8,8 +8,8 @@ class DaoSlide extends IDao{
 
 	}
 
-	public function inserir( IObject $objeto ){}
-	public function editar( Iobject $objeto ){}
+	//public function inserir( IObject $objeto ){}
+	//public function editar( Iobject $objeto ){}
 	//public function buscar( $id ){}
 	public function listar(){}
 
@@ -115,6 +115,152 @@ public function buscar( $slide_id ){
 	}
 
 
+
+
+	public function inserir( IObject $slide ){
+
+		/*echo '<pre>';
+		print_r($slide);
+		exit();*/
+		$m_session = new Session();
+
+		try{
+			
+			$sql = "INSERT INTO slide ( titulo, enunciado, enunciado_html, content_html, objetivo, disciplina, posicao, numero, status, correta, comentario, slide_tipo, parent, peso, arquivo, nivel, usuario, incluidoem ) 
+					VALUES ( :titulo, :enunciado, :enunciado_html, :content_html, :objetivo, :disciplina, :posicao, :numero, :status, :correta, :comentario, :slide_tipo, :parent, :peso, :arquivo, :nivel, :usuario, NOW() )";
+
+
+			$this->conex->beginTransaction();
+
+			$query = $this->conex->prepare( $sql );
+
+			$query->bindParam( ':titulo', $slide->__get('titulo') );
+			$query->bindParam( ':enunciado', $slide->__get('enunciado') );
+			$query->bindParam( ':enunciado_html', $slide->__get('enunciado_html') );
+			$query->bindParam( ':content_html', $slide->__get('content_html') );
+			$query->bindParam( ':objetivo', $slide->__get('objetivo') );
+			$query->bindParam( ':disciplina', $slide->__get('disciplina') );
+			$query->bindParam( ':posicao', $slide->__get('posicao') );
+			$query->bindParam( ':numero', $slide->__get('numero') );
+			$query->bindParam( ':status', $slide->__get('status') );
+			$query->bindParam( ':correta', $slide->__get('correta') );
+			$query->bindParam( ':comentario', $slide->__get('comentario') );
+			$query->bindParam( ':slide_tipo', $slide->__get('slide_tipo') );
+			$query->bindParam( ':parent', $slide->__get('parent') );
+			$query->bindParam( ':peso', $slide->__get('peso') );
+			$query->bindParam( ':arquivo', $slide->__get('arquivo') );
+			$query->bindParam( ':nivel', $slide->__get('nivel') );
+			$query->bindParam( ':usuario', $m_session->getValue( 'usuarioid' ) );
+
+			$query->execute();
+
+            $lastId = $this->conex->lastInsertId('id');         
+            $this->conex->commit();
+
+            return $lastId;
+			
+		}catch( Exception $e ){
+
+			//print_r( $query->errorInfo()); exit('2');
+			$this->conex->rollback();			
+			return false;
+		}
+	}
+
+	public function editar( IObject $slide ){
+
+		/*echo "<pre>";
+        print_r($slide);
+        echo "</pre>";
+        exit();*/
+
+		try{
+
+			$sql = "UPDATE slide SET
+					titulo = :titulo, enunciado = :enunciado, enunciado_html = :enunciado_html, content_html = :content_html, posicao = :posicao, numero = :numero, status = :status, 
+					correta = :correta, comentario = :comentario, slide_tipo = :slide_tipo, parent = :parent, peso = :peso, arquivo = :arquivo, nivel = :nivel
+					WHERE id = :id";
+
+
+			$this->conex->beginTransaction();
+			$query = $this->conex->prepare( $sql );
+			$query->bindParam( ':titulo', $slide->__get('titulo') );
+			$query->bindParam( ':enunciado', $slide->__get('enunciado') );
+			$query->bindParam( ':enunciado_html', $slide->__get('enunciado_html') );
+			$query->bindParam( ':content_html', $slide->__get('content_html') );
+			$query->bindParam( ':posicao', $slide->__get('posicao') );
+			$query->bindParam( ':numero', $slide->__get('numero') );
+			$query->bindParam( ':status', $slide->__get('status') );
+			$query->bindParam( ':correta', $slide->__get('correta') );
+			$query->bindParam( ':comentario', $slide->__get('comentario') );
+			$query->bindParam( ':slide_tipo', $slide->__get('slide_tipo') );
+			$query->bindParam( ':parent', $slide->__get('parent') );
+			$query->bindParam( ':peso', $slide->__get('peso') );
+			$query->bindParam( ':arquivo', $slide->__get('arquivo') );
+			$query->bindParam( ':nivel', $slide->__get('nivel') );
+			$query->bindParam( ':id', $slide->__get('id') );
+
+			$query->execute();
+
+            return $this->conex->commit();
+
+			
+		}catch( Exception $e ){
+
+			$this->conex->rollback();
+			//$e->getTraceAsString();
+			//print_r( $query->errorInfo()); exit();
+			return false;
+		}
+	}
+
+
+
+	public function removerCompetencias( $slide_id ){
+
+		try{
+
+			$sql = "DELETE FROM competencia_slide WHERE slide = :slide_id";
+
+			$query = $this->conex->prepare( $sql );
+
+			$query->bindParam( ':slide_id', $slide_id );
+
+			return $query->execute();
+
+		}catch( Exception $e ){
+
+			$this->conex->rollback();			
+			return false;
+		}
+	}
+
+
+
+	public function addCompetencia( $slide_id, $competencia_id ){
+
+		if( !empty( $competencia_id ) ){
+			try{
+
+				$sql = "INSERT INTO competencia_slide (competencia, slide ) VALUES ( :competencia_id, :slide_id)";
+
+				$query = $this->conex->prepare( $sql );
+
+				$query->bindParam( ':slide_id', $slide_id );
+				$query->bindParam( ':competencia_id', $competencia_id );
+
+				return $query->execute();
+
+			}catch( Exception $e ){
+
+				$this->conex->rollback();			
+				return false;
+			}
+		}
+	}
+
+
+
 	/*public function getSlidesByAvaliacao( $objeto_id, $versao, $bloco = false ){
 	
 		$blc = ( $bloco )? " AND bloco = '" . $bloco['bloco'] . "' AND nivel = '" . $bloco['nivel'] . "'" : "";
@@ -177,104 +323,6 @@ public function buscar( $slide_id ){
 	}*/
 
 
-
-	/*public function inserir( Slide $slide ){
-
-		$m_session = new Session();
-
-		try{
-			
-			$sql = "INSERT INTO slide ( titulo, enunciado, enunciado_html, content_html, objeto, posicao, numero, status, correta, comentario, slide_tipo, parent, peso, obj_versao, caminho, nome_arquivo, bloco, nivel, usuario, incluidoem ) 
-					VALUES ( :titulo, :enunciado, :enunciado_html, :content_html, :objeto, :posicao, :numero, :status, :correta, :comentario, :slide_tipo, :parent, :peso, :obj_versao, :caminho, :nome_arquivo, :bloco, :nivel, :usuario, NOW() )";
-
-			$this->conex->beginTransaction();
-
-			$query = $this->conex->prepare( $sql );
-
-			$query->bindParam( ':titulo', $slide->__get('titulo') );
-			$query->bindParam( ':enunciado', $slide->__get('enunciado') );
-			$query->bindParam( ':enunciado_html', $slide->__get('enunciado_html') );
-			$query->bindParam( ':content_html', $slide->__get('content_html') );
-			$query->bindParam( ':objeto', $slide->__get('objeto') );
-			$query->bindParam( ':posicao', $slide->__get('posicao') );
-			$query->bindParam( ':numero', $slide->__get('numero') );
-			$query->bindParam( ':status', $slide->__get('status') );
-			$query->bindParam( ':correta', $slide->__get('correta') );
-			$query->bindParam( ':comentario', $slide->__get('comentario') );
-			$query->bindParam( ':slide_tipo', $slide->__get('slide_tipo') );
-			$query->bindParam( ':parent', $slide->__get('parent') );
-			$query->bindParam( ':peso', $slide->__get('peso') );
-			$query->bindParam( ':obj_versao', $slide->__get('obj_versao') );
-			$query->bindParam( ':caminho', $slide->__get('caminho') );
-			$query->bindParam( ':nome_arquivo', $slide->__get('nome_arquivo') );
-			$query->bindParam( ':bloco', $slide->__get('bloco') );
-			$query->bindParam( ':nivel', $slide->__get('nivel') );
-			$query->bindParam( ':usuario', $m_session->getValue( 'usuarioid' ) );
-
-			$query->execute();
-
-            $lastId = $this->conex->lastInsertId('slide_id_seq');         
-            $this->conex->commit();
-
-            return $lastId;
-			
-		}catch( Exception $e ){
-
-			//print_r( $query->errorInfo()); exit('2');
-			$this->conex->rollback();			
-			return false;
-		}
-	}*/
-
-	/*public function editar( Slide $slide ){
-
-		try{
-			
-			$sql = "UPDATE slide SET
-					titulo = :titulo, enunciado = :enunciado, enunciado_html = :enunciado_html, content_html = :content_html, posicao = :posicao, numero = :numero, status = :status, 
-					correta = :correta, comentario = :comentario, slide_tipo = :slide_tipo, parent = :parent, peso = :peso, caminho = :caminho, nome_arquivo = :nome_arquivo, bloco = :bloco, nivel = :nivel
-					WHERE id = :id";
-
-
-			$this->conex->beginTransaction();
-			$query = $this->conex->prepare( $sql );
-			$query->bindParam( ':titulo', $slide->__get('titulo') );
-			$query->bindParam( ':enunciado', $slide->__get('enunciado') );
-			$query->bindParam( ':enunciado_html', $slide->__get('enunciado_html') );
-			$query->bindParam( ':content_html', $slide->__get('content_html') );
-			$query->bindParam( ':posicao', $slide->__get('posicao') );
-			$query->bindParam( ':numero', $slide->__get('numero') );
-			$query->bindParam( ':status', $slide->__get('status') );
-			$query->bindParam( ':correta', $slide->__get('correta') );
-			$query->bindParam( ':comentario', $slide->__get('comentario') );
-			$query->bindParam( ':slide_tipo', $slide->__get('slide_tipo') );
-			$query->bindParam( ':parent', $slide->__get('parent') );
-			$query->bindParam( ':peso', $slide->__get('peso') );
-			//$query->bindParam( ':obj_versao', $slide->__get('obj_versao') );
-			$query->bindParam( ':caminho', $slide->__get('caminho') );
-			$query->bindParam( ':nome_arquivo', $slide->__get('nome_arquivo') );
-			$query->bindParam( ':bloco', $slide->__get('bloco') );
-			$query->bindParam( ':nivel', $slide->__get('nivel') );
-			$query->bindParam( ':id', $slide->__get('id') );
-
-			$query->execute();
-
-            if( $this->conex->commit() ){
-
-            	$this->setEdicaoSlide( array( 'slide' => $slide->__get('id'), 'acao' => 'E' ) );
-            }
-
-            return true;
-
-			
-		}catch( Exception $e ){
-
-			$this->conex->rollback();
-			//$e->getTraceAsString();
-			//print_r( $query->errorInfo()); exit();
-			return false;
-		}
-	}*/
 
 
 	/*public function editarDadosArquivo( $id, $caminho, $nome_arquivo ){
@@ -365,6 +413,27 @@ public function buscar( $slide_id ){
 
 
 	/*public function remover( Slide $slide ){
+
+		try{
+
+			$sql = "DELETE FROM slide WHERE id = :slide_id";
+
+			$query = $this->conex->prepare( $sql );
+
+			$query->bindParam( ':slide_id', $slide->__get('id') );
+
+			return $query->execute();
+
+		}catch( Exception $e ){
+
+			$this->conex->rollback();			
+			return false;
+		}
+	}*/
+
+
+/*
+	public function removerCompetencias( $slide_id, $competencia_id ){
 
 		try{
 

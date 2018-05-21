@@ -4,7 +4,7 @@ include_once __DIR__ . "/../config.php";
 class Competencia extends IObject {
 
 	public static $instances = array();
-	protected $controller = '../controller/controllerCompetencia.php';
+	protected $controller = '../controller/controller.php?c=competencia';
 	private $id;
 	private $nome;
 	private $disciplina;
@@ -60,6 +60,29 @@ class Competencia extends IObject {
 			}
 		}
 
+		return Competencia::$instances;
+
+	}	
+
+
+	public function getCompetenciaBySlide( $slide_id ){
+	
+		$daoCompetencia = new DaoCompetencia();
+
+		$dados = $daoCompetencia->getCompetenciaBySlide( $slide_id );
+		
+		Competencia::$instances = '';
+
+		if( $dados ){			
+
+			foreach ( $dados as $value ) {
+
+				$competencia = new Competencia( array( 'id' => $value['competencia'] ) );
+		
+				Competencia::$instances[] = $competencia; 
+			}
+		}
+		
 		return Competencia::$instances;
 
 	}

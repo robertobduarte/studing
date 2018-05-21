@@ -9,6 +9,8 @@ $m_autenticacao->checkAcess();
 
 $m_dominio = new Dominio( array('id' => @$_REQUEST['dmn'] ) );
 if( empty( $m_dominio->__get( 'id' ) ) ){
+
+	exit('1dfsfwsf');
 	$m_session->setValue( 'mensagem', 'Parâmetros incorretos.' );
 	header("location: acessonegado.php");
 	exit();

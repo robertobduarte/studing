@@ -147,6 +147,30 @@ CREATE TABLE slide_tipo (
 
 
 
+CREATE TABLE competencia_slide(
+  competencia int not null,
+  slide int not null,
+  primary key (competencia, slide)
+);
+
+
+CREATE TABLE alternativa (
+  id int auto_increment NOT NULL primary key,
+  slide int not null,
+  valor char(1),
+  texto text,
+  texto_html text,
+  arquivo blob,
+  tipo char(3),
+  usuario int not null,
+  incluidoem date
+);
+
+CREATE TABLE alternativa_tipo (
+  id char(3) NOT NULL primary key,
+  nome varchar(50)
+);
+
 
 #insert pessoa
 insert into pessoa (nome, email) values

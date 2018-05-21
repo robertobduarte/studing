@@ -13,13 +13,20 @@ if( empty( $objetivo_id ) ){
 	exit();	
 }
 
+$disciplina = '';
+if( !empty( $disciplina_id ) ){
+
+	$m_disciplina = new Disciplina( array( 'id' => $disciplina_id ) );
+	$disciplina = $m_disciplina->__get('nome');
+}
+
 $m_objetivo = new Objetivo( array( 'id' => $objetivo_id ) );
 
 $m_objetivo->getParents();
 $m_objetivo->setTree(true);
 
 //popula o atributo do objeto com as disciplinas que estão vinculadas ao objetivo
-$m_objetivo->getDisciplinas( $disciplina_id );
+$m_objetivo->getDisciplinas();
 
 ?>
 
@@ -59,7 +66,17 @@ $m_objetivo->getDisciplinas( $disciplina_id );
 
 			<div class="col-md-12 divesp"></div>
 
+			<section class="col-md-12">
+
+				<?php $m_objetivo->buttonNovoSlide( $disciplina_id ); ?>
+				
+			</section>
+
+			<!-- <div class="col-md-12 divesp"></div> -->
+
 			<section class="col-md-12" id="objetivo">
+
+				<h3 style="font-weight:bold;"><?=$disciplina;?></h3>
 
 				<?php $m_objetivo->showListSlides( $disciplina_id ); ?>
 				

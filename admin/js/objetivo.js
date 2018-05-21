@@ -128,7 +128,7 @@ function validarForm( idObjForm ){
 function addDisciplinaObjetivo( disciplina ){
 
 	$.ajax({
-		url:"../controller/controllerDisciplina.php",
+		url:"../controller/controller.php?c=disciplina",
 		data:{ 
 				action: 'addDisciplinaObjetivo',
 				method: 'ajaxRequest',
@@ -165,7 +165,7 @@ function addDisciplinaObjetivo( disciplina ){
 function rmDisciplinaObjetivo( disciplina ){
 
 	$.ajax({
-		url:"../controller/controllerDisciplina.php",
+		url:"../controller/controller.php?c=disciplina",
 		data:{ 
 				action: 'rmDisciplinaObjetivo',
 				method: 'ajaxRequest',
@@ -202,7 +202,7 @@ function rmDisciplinaObjetivo( disciplina ){
 function atualizaLinksBQ(){
 
 	$.ajax({
-		url:"../controller/controllerObjetivo.php",
+		url:"../controller/controller.php?c=objetivo",
 		data:{
 				action: 'getDisciplinasObjetivo',
 				method: 'ajaxRequest',

@@ -38,10 +38,13 @@ abstract class Icontroller {
         /*echo "<pre>";
         print_r($this->dados);
         echo "</pre>";
-        exit();*/
-        
+        exit();
+        */
             
         } 
+
+        $this->dados['method'] = ( isset( $this->dados['method'] ) )? $this->dados['method'] : 'post' ;
+
         $this->action = $this->dados['action'];
         $this->method = $this->dados['method']; 
 

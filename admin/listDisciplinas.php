@@ -7,8 +7,8 @@ $m_disciplina = new Disciplina();
 $m_disciplina->__set( 'Disciplina', array( 'dominio' => $m_dominio->__get('id') ) );
 $m_disciplina->listar( $m_dominio->__get('id') );
 
-$dadosForm = array( 'method' => 'ajaxRequest' );
-$m_session->setValue('form_disciplina', $dadosForm );
+/*$dadosForm = array( 'method' => 'ajaxRequest' );
+$m_session->setValue('form_disciplina', $dadosForm );*/
 ?>
 
 <script src="js/disciplina.js?v=<?= filemtime('js/disciplina.js'); ?>"></script>

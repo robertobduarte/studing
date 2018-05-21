@@ -5,7 +5,8 @@ class Objetivo extends IObject{
 
 	protected static $instances = array();
 	protected $tiposDeDados = array();
-	protected $controller = '../controller/controllerObjetivo.php';
+	//protected $controller = '../controller/controllerObjetivo.php';
+	protected $controller = '../controller/controller.php?c=objetivo';
 	private $id;
 	private $nome;
 	private $dominio;
@@ -342,7 +343,7 @@ class Objetivo extends IObject{
     /*
     define a árvore de objetivos.
     */
-    public function showTreeAvaliacao(){
+    /*public function showTreeAvaliacao(){
     		
 		if( empty( $this->parents ) ){
     		
@@ -365,7 +366,8 @@ class Objetivo extends IObject{
 		$tree .= '</div>';
 
 		echo $tree;
-    }
+    }*/
+
 
 
     public function novo(){
@@ -399,6 +401,21 @@ class Objetivo extends IObject{
 			
 		echo '</div>';
 
+    }
+
+
+    public function buttonNovoSlide( $disciplina ){
+
+    	if( !empty( $disciplina ) ){
+
+    		echo '<div class="col-md-2 col-sm-3 col-xs-12 header">';
+
+	    		echo '<a href="slide.php?dmn=' . $this->dominio . '&disc=' . $disciplina . '&obj=' . $this->__get('id') . '"><button type="button" class="btn btn-primary btn-cor-primary btn-100"><i class="fa fa-plus-circle" aria-hidden="true"></i> Questão</button></a>';
+				
+			echo '</div>';
+
+    	}
+    	
     }
 
 
@@ -602,17 +619,17 @@ class Objetivo extends IObject{
 
 	    		$class = ( $linkId == $disciplina->__get('id') )? 'linkActive' : '';	
 
-				$form .= '<div class="col-md-2 col-sm-4 col-xs-6 linkDisciplina ' . $class . '" id="linkDisciplina_' . $disciplina->__get('id') . '">';
+	    		$form .= '<a href="bancodequestoes.php?dmn=' . $this->__get('dominio') . '&obj=' . $this->__get('id') . '&disc=' . $disciplina->__get('id') . '">';
 
-					$form .= '<a href="bancodequestoes.php?dmn=' . $this->__get('dominio') . '&obj=' . $this->__get('id') . '&disc=' . $disciplina->__get('id') . '">';
+					$form .= '<div class="col-md-2 col-sm-4 col-xs-6 linkDisciplina ' . $class . '" id="linkDisciplina_' . $disciplina->__get('id') . '">';	
 							
 					$form .= '<img src="img/estudar.png" alt="" class="img-circle" style="max-width:100px;"><br>';
 
 					$form .= '<span>' . $disciplina->__get('nome') . '</span>';
-
-					$form .= '</a>';
-
-				$form .= '</div>';		
+					
+					$form .= '</div>';
+					
+				$form .= '</a>';		
 			}
 
 		$form .= '</div>';
@@ -668,7 +685,7 @@ class Objetivo extends IObject{
 		    				$icn = ( $slide->__get('slide_tipo') == 'SL' )? ' <i class="fa fa-file-text fa-4x" aria-hidden="true"></i> ' : $slide->__get('tipo');
 
 			    			$table .= '<tr id="tr_' . $slide->__get('id') . '" style="background:' . $background . ';">';
-			    				$table .= '<td width="3%" class="' . $border . '"><a href="slide.php?sld=' . $slide->__get('id') . '" class="" > <i class="fa fa-pencil" aria-hidden="true"></i></a></td>';
+			    				$table .= '<td width="3%" class="' . $border . '"><a href="slide.php?sld=' . $slide->__get('id') . '&dmn=' . $this->__get('dominio') . '" class="" > <i class="fa fa-pencil" aria-hidden="true"></i></a></td>';
 			    				$table .= '<td width="3%">' . $slide->__get('posicao') . '</td>';
 			    				$table .= '<td width="3%">' . $slide->__get('numero') . '</td>';
 			    				$table .= '<td width="25%">' . strip_tags( $slide->__get('titulo') ) . '</td>';
