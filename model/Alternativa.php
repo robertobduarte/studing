@@ -47,24 +47,24 @@ class Alternativa extends IObject{
 	}
 
 
-	public function getObjeto( $slide_id  ){
+	public function getObjeto( $alternativa_id  ){
 
-		$daoSlide = new DaoSlide();
+		$daoAlternativa = new DaoAlternativa();
 
-		$dados = $daoSlide->buscar( $slide_id );
+		$dados = $daoAlternativa->buscar( $alternativa_id );
 
 		$this->__set( $this, $dados );
 	}
 
 
-	private function getAlternativa( $alternativa_id  ){
+	/*private function getAlternativa( $alternativa_id  ){
 
 		$daoAlternativa = new DaoAlternativa();
 
 		$dados = $daoAlternativa->getAlternativa( $alternativa_id );
 		
 		$this->__set( $this, $dados );
-	}
+	}*/
 
 
 

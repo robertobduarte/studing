@@ -738,8 +738,7 @@ class Slide extends IObject {
 											
 								$table .= '<input type="hidden" name="id" id="idAlt_' . $this->__get('id') . '" value="" />';
 								$table .= '<input type="hidden" name="slide" id="slideAlt_' . $this->__get('id') . '" value="" />';
-								$table .= '<input type="hidden" id="arquivoAlt_' . $this->__get('id') . '" name="arquivo" value="">';
-								$table .= '<input type="hidden" id="caminhoAlt_' . $this->__get('id') . '"  name="caminho" value="">';					
+								$table .= '<input type="hidden" id="arquivoAlt_' . $this->__get('id') . '" name="arquivo" value="">';					
 								$table .= '<input type="hidden" name="alternativa_tipo" id="alternativa_tipo_' . $this->__get('id') . '" value="">';
 
 								$table .= '<div class="row">';

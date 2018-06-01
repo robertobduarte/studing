@@ -15,7 +15,16 @@ class ControllerAlternativa extends Icontroller {
 	protected function definePropriedades(){
 
 		$this->m_object = new Alternativa();
-		$this->destinoDefault = '../view/listObjetos.php?dmn=' . $this->m_session->getValue( 'dominio' );
+		
+		if( !empty( $this->dados['slide'] ) ){
+
+			$this->destinoDefault = '../admin/slide.php?dmn=' . $this->m_session->getValue( 'dominio' ) . '&sld=' . $this->dados['slide'];
+
+		}else{
+
+			$this->destinoDefault = '../admin/';
+		}
+
 		$this->mensagemDefault = 'Erro! Não foi possível completar a ação.';
 	}
 
@@ -26,7 +35,7 @@ class ControllerAlternativa extends Icontroller {
 
 			case 'salvar':
 
-				if ( !array_intersect( array( 'C', 'U' ), $this->m_session->getValue( 'permissoes' ) )){
+				if( !$this->m_autenticacao->hasPermission( array( 'C', 'U' ) ) ){
 
 					echo 'sem permissao';
 					$this->redirect( array( 'msg' => 'Usuário sem permissão para esta ação.' ) );					
@@ -38,7 +47,7 @@ class ControllerAlternativa extends Icontroller {
 
 			case 'getAlterantiva':
 
-				if ( !array_intersect( array( 'C', 'U', 'R' ), $this->m_session->getValue( 'permissoes' ) )){
+				if( !$this->m_autenticacao->hasPermission( array( 'C', 'U', 'R' ) ) ){
 
 					echo 'sem permissao';
 					$this->redirect( array( 'msg' => 'Usuário sem permissão para esta ação.' ) );					
@@ -48,31 +57,9 @@ class ControllerAlternativa extends Icontroller {
 				break;
 
 
-			case 'baixarArquivo':
-
-				if ( !array_intersect( array( 'R' ), $this->m_session->getValue( 'permissoes' ) )){
-
-					$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Sem permissão.' ) );					
-				}
-
-				$this->baixar();
-				break;
-
-
-			case 'removerArquivo':
-
-				if ( !array_intersect( array( 'D' ), $this->m_session->getValue( 'permissoes' ) )){
-
-					$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Sem permissão.' ) );					
-				}
-
-				$this->removerArquivo();
-				break;
-			
-
 			case 'remover':
 
-				if ( !array_intersect( array( 'D' ), $this->m_session->getValue( 'permissoes' ) )){
+				if( !$this->m_autenticacao->hasPermission( array( 'D' ) ) ){
 
 					$this->redirect( array( 'msg' => 'Usuário sem permissão para esta ação.' ) );
 				}
@@ -113,36 +100,6 @@ class ControllerAlternativa extends Icontroller {
 		}
 
 		$this->object_id = $this->m_object->__get('id');
-		
-		/*
-		Upload arquivo
-		*/
-		if( empty( $this->dados['file'] ) ){
-
-			$m_slide = new Slide( array( 'id' => $this->m_object->__get('slide') ) );
-			$m_dominio = new Dominio( array( 'id' => $m_slide->getDominio() ) );
-
-			$dadosUpload = array( 
-							'diretorio' => $m_dominio->__get('diretorio').'/objetos',
-							'caminho_relativo' => 'dominio',
-							'prefixo' => $this->object_id . '_A_'
-							);
-
-			$uploadObjeto = new UploadObjeto( $dadosUpload );
-			$retorno = $uploadObjeto->getInformacoesArquivo();
-
-			if( $retorno['retorno']['cod'] ){
-
-				$this->m_object->__set( 'Alternativa', array( 'caminho' => $retorno['caminho_relativo_final'] . $retorno['nome_arquivo'] ) );
-				$this->m_object->__set( 'Alternativa', array( 'nome_arquivo' => $retorno['nome_arquivo'] ) );
-
-			}else{
-
-				$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Erro ao gravar arquivo: <br>' . $retorno['retorno']['msg'] ) );
-			}			
-		}
-
-		$this->object_id = $this->m_object->__get('id');
 
 		$retorno = $this->m_object->editar();
 
@@ -151,7 +108,7 @@ class ControllerAlternativa extends Icontroller {
 			$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Erro ao gravar alternativa.' ) );		
 		}
 
-		$this->retornoAjax( array( 'cod' => 1, 'msg' => 'Alternativa gravada com sucesso', 'id' => $this->object_id,'caminho' => $this->m_object->__get('caminho'), 'nome_arquivo' => $this->m_object->__get('nome_arquivo') ) );
+		$this->retornoAjax( array( 'cod' => 1, 'msg' => 'Alternativa gravada com sucesso', 'nome_arquivo' => $this->m_object->__get('arquivo') ) );
 
 	}
 
@@ -163,10 +120,9 @@ class ControllerAlternativa extends Icontroller {
 		$alt = array();
 		$alt['id'] = $m_alternativa->__get('id');
 		$alt['slide'] = $m_alternativa->__get('slide');
-		$alt['nome_arquivo'] = $m_alternativa->__get('nome_arquivo');
-		$alt['caminho'] = $m_alternativa->__get('caminho');
-		$alt['alternativa_tipo'] = $m_alternativa->__get('alternativa_tipo');
+		$alt['arquivo'] = $m_alternativa->__get('arquivo');
 		$alt['tipo'] = $m_alternativa->__get('tipo');
+		$alt['tipo_nome'] = $m_alternativa->__get('tipo_nome');
 		$alt['valor'] = $m_alternativa->__get('valor');
 		$alt['texto'] = $m_alternativa->__get('texto');
 		$alt['texto_html'] = $m_alternativa->__get('texto_html');
@@ -177,7 +133,7 @@ class ControllerAlternativa extends Icontroller {
 
 
 
-	protected function remover(){
+	/*protected function remover(){
 		
 		$m_alternativa = new Alternativa( array( 'id' => $this->dados['id'] ) );
 	
@@ -191,46 +147,7 @@ class ControllerAlternativa extends Icontroller {
 
 			$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Erro ao excluir alternativa' ) );
 		}
-	}
-
-
-	private function baixar(){
-		
-		$m_alternativa = new Alternativa( array( 'id' => $this->dados['id'] ) );
-
-		if( !empty( $m_alternativa->__get('caminho') ) ){
-
-			$this->retornoAjax( array( 'cod' => 1, 'msg' => 'Ok', 'caminho' => $m_alternativa->__get('caminho'), 'dominio' => $this->m_session->getValue( 'dominio' ) ) );
-
-		}else{
-
-			$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Erro ao localizar o diretório do arquivo' ) );
-		}
-	}
-
-
-	private function removerArquivo(){
-		
-		$m_alternativa = new Alternativa( array( 'id' => $this->dados['id'] ) );
-
-		$caminho = $m_alternativa->__get('caminho');
-
-		$m_alternativa->__set( 'Alternativa', array( 'caminho' => '', 'nome_arquivo' => '' ) );
-		
-		$retorno = $m_alternativa->editar();
-
-		if( $retorno ){
-
-			unlink( APP.$caminho );
-
-			$this->retornoAjax( array( 'cod' => 1, 'msg' => 'Arquivo excluído.' ) );
-
-		}else{
-
-			$this->retornoAjax( array( 'cod' => 0, 'msg' => 'Erro ao excluir arquivo' ) );
-		}
-	}
-
+	}*/
 
 	
 }

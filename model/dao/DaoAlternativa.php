@@ -11,17 +11,18 @@ class DaoAlternativa extends IDao{
 	public function listar(){}
 	//public function inserir( IObject $objeto ){}
 	//public function editar( Iobject $objeto ){}
-	public function buscar( $id ){}
+	//public function buscar( $id ){}
 
 	/*
 	retorna a alterantiva 
 	*/
-	public function getAlternativa( $alternativa_id ){
+	//public function getAlternativa( $alternativa_id ){
+	public function buscar( $alternativa_id ){
 	
 		try{
 
 			$sql = "SELECT a.*, at.nome as tipo_nome FROM alternativa a
-					INNER JOIN alternativa_tipo at ON ( a.alternativa_tipo = at.id )
+					INNER JOIN alternativa_tipo at ON ( a.tipo = at.id )
 					WHERE a.id = :alternativa_id";
 
 			$query = $this->conex->prepare( $sql );
@@ -110,8 +111,8 @@ class DaoAlternativa extends IDao{
 
 		try{
 			
-			$sql = "INSERT INTO alternativa ( slide, valor, texto, texto_html, nome_arquivo, caminho, alternativa_tipo, usuario, incluidoem ) 
-					values( :slide, :valor, :texto,  :texto_html, :nome_arquivo, :caminho, :alternativa_tipo, :usuario, NOW() )";
+			$sql = "INSERT INTO alternativa ( slide, valor, texto, texto_html, arquivo, tipo, usuario, incluidoem ) 
+					values( :slide, :valor, :texto,  :texto_html, :arquivo, :tipo, :usuario, NOW() )";
 
 			$this->conex->beginTransaction();
 
@@ -122,12 +123,12 @@ class DaoAlternativa extends IDao{
 			$query->bindParam( ':texto_html', $alternativa->__get('texto_html') );
 			$query->bindParam( ':nome_arquivo', $alternativa->__get('nome_arquivo') );
 			$query->bindParam( ':caminho', $alternativa->__get('caminho') );
-			$query->bindParam( ':alternativa_tipo', $alternativa->__get('alternativa_tipo') );
+			$query->bindParam( ':tipo', $alternativa->__get('tipo') );
 			$query->bindParam( ':usuario', $m_session->getValue( 'usuarioid' ) );
 
 			$query->execute();
-
-            $lastId = $this->conex->lastInsertId('alternativa_id_seq');         
+ 
+            $lastId = $this->conex->lastInsertId('id');         
             $this->conex->commit();
 
             return $lastId;
@@ -146,7 +147,7 @@ class DaoAlternativa extends IDao{
 		try{
 			
 			$sql = "UPDATE alternativa	SET 
-					slide = :slide, valor = :valor, texto = :texto, texto_html = :texto_html, nome_arquivo = :nome_arquivo, caminho = :caminho, alternativa_tipo = :alternativa_tipo
+					slide = :slide, valor = :valor, texto = :texto, texto_html = :texto_html, arquivo = :arquivo,tipo = :tipo
 					WHERE id = :id";
 
 			$this->conex->beginTransaction();
@@ -155,9 +156,8 @@ class DaoAlternativa extends IDao{
 			$query->bindParam( ':valor', $alternativa->__get('valor') );
 			$query->bindParam( ':texto', $alternativa->__get('texto') );
 			$query->bindParam( ':texto_html', $alternativa->__get('texto_html') );
-			$query->bindParam( ':nome_arquivo', $alternativa->__get('nome_arquivo') );
-			$query->bindParam( ':caminho', $alternativa->__get('caminho') );
-			$query->bindParam( ':alternativa_tipo', $alternativa->__get('alternativa_tipo') );
+			$query->bindParam( ':arquivo', $alternativa->__get('arquivo') );
+			$query->bindParam( ':tipo', $alternativa->__get('tipo') );
 			$query->bindParam( ':id', $alternativa->__get('id') );
 
 			$query->execute();

@@ -154,7 +154,7 @@ public function buscar( $slide_id ){
 
 			$query->execute();
 
-            $lastId = $this->conex->lastInsertId('id');         
+            $lastId = $this->conex->lastInsertId();         
             $this->conex->commit();
 
             return $lastId;

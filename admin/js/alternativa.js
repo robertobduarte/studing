@@ -145,8 +145,6 @@ function validarFormAlternativa( idForm ){
 
 	obj = $('#' + idForm + ' .req');
 	$.each( obj, function() {
-		
-		//alert( $(this).val() );
 
 		if( $(this).val() == '' ){
 			$(this).parent().append('<span class="error">Campo obrigatório</span>');
@@ -164,7 +162,7 @@ function baixarArquivoAlternativa( id ){
 	$('#mensagemAlt_'+id).find('div').remove();
 
 	$.ajax({
-			url: "../controller/controllerAlternativa.php",
+			url: '../controller/controller.php?c=alternativa',
 			data:  { 	action: 'baixarArquivo', 
 						method: 'ajaxRequest', 
 						id: id
@@ -197,7 +195,7 @@ function removerArquivoAlternativa( id ){
 	$('#fileAlt_'+slide).val('');
 
 	$.ajax({
-			url: "../controller/controllerAlternativa.php",
+			url: '../controller/controller.php?c=alternativa',
 			data:  { 	action: 'removerArquivo', 
 						method: 'ajaxRequest', 
 						id: id
@@ -242,14 +240,14 @@ function salvarAlternativa( id ) {
   	formData.append( 'valor', $('#valorAlt_'+id).val() ); 
   	formData.append( 'texto', $('#textoAlt_'+id).val() ); 
   	formData.append( 'nome_arquivo', $('#arquivoAlt_'+id).val() ); 
-  	formData.append( 'alternativa_tipo', $('input[name="alternativa_tipo"]').val() ); 
-  	formData.append( 'caminho', $('#caminhoAlt_'+id).val() ); 
+  	formData.append( 'tipo', $('input[name="alternativa_tipo"]').val() ); 
+  	//formData.append( 'caminho', $('#caminhoAlt_'+id).val() ); 
   	formData.append( 'texto_html', tinyMCE.get('textoAltHtml_'+id).getContent() ); 
   	formData.append( 'method', 'ajaxRequest' ); 
   	formData.append( 'action', 'salvar');
   	  
   	$.ajax({
-        	url: '../controller/controllerAlternativa.php',
+        	url: '../controller/controller.php?c=alternativa',
         	data: formData,
         	type: 'POST',
         	contentType: false, 
@@ -266,7 +264,7 @@ function salvarAlternativa( id ) {
                    	if( obj['nome_arquivo'] != null ){
 
                    		$('#arquivoAlt_'+id).val(obj['nome_arquivo']);
-                   		$('#caminhoAlt_'+id).val(obj['caminho']);
+                   		//$('#caminhoAlt_'+id).val(obj['caminho']);
 
                    		$('#listArqAlt_'+id).find('li').remove();
                    		$('#listArqAlt_'+id).append('<li class="iconeLink">'+
@@ -299,7 +297,7 @@ function removerAlternativa( id ){
 	var alternativa = $('#idAlt_'+id).val();
 
 	$.ajax({
-			url: "../controller/controllerAlternativa.php",
+			url: '../controller/controller.php?c=alternativa',
 			data:  { 	action: 'remover', 
 						method: 'ajaxRequest', 
 						id: alternativa
